@@ -1,0 +1,70 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block activevilsoft %} active show {% endblock %}
+{% block activeusuarios %} active {% endblock %}
+{% block titulo %}
+Mantener Usuarios
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="offset-md-10 col-md-4">
+
+		<a href="{% url 'vilsoft:RegistrarUsuarios' %}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Registrar Usuarios</button>
+		</a>
+
+	</div>
+</div>
+<br>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+	<thead>
+		<tr>
+			<th scope="col">Nro</th>
+			<th scope="col">Nombres y Apellidos</th>
+			<th scope="col">Correo</th>
+			<th scope="col">Movil</th>
+			<th scope="col">Rol</th>
+			<th scope="col" style="text-align:center;">Opcion</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		{% if Perfil %}
+			{% for per in Perfil %}
+
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>
+							<div class="media-body pd-l-15">
+								<div class="avatar" style=" float:left;"><img src="{{ per.Foto.url }}" class="rounded-circle" alt=""></div>
+								<div style="padding-top:10px; padding-left: 10px; float:left;">
+									{{ per.User.first_name }} {{ per.User.last_name }}
+								</div>
+							</div>
+						</td>
+						<td style="vertical-align:middle;">{{ per.User.email }}</td>
+						<td style="vertical-align:middle;">{{ per.movil }}</td>
+						<td style="vertical-align:middle;"></td>
+						<td>
+							<a href="{% url 'vilsoft:EditarUsuarios' per.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar"><i class="fas fa-pen-nib "></i></a>
+							{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+							<a href="{% url 'vilsoft:EliminarUsuario' per.id %}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+							{% endif %}
+						</td>
+
+					</tr>
+
+			{% endfor %}
+
+		{% else %}
+		<tr>
+			<td colspan="8" style="text-align:center;">
+				<h3>NO EXISTEN USUARIOS</h3>
+			</td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
+{% endblock %}

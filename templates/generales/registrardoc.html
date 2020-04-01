@@ -1,0 +1,32 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activegenerales %} active {% endblock %}
+{% block activegeneralesdocidentidad %} active {% endblock %}
+{% block titulo %}
+<h1 class="df-title">Nuevo Documento</h1>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <a href="{% url 'generales:detalledocumento'%}">
+        <button type="button" class="btn btn-outline-primary btn-icon">
+          <i data-feather="arrow-left"></i> Regresar
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>{{ form.Name.label }}</label>{{form.Name }}
+    </div>
+    <div class="form-group col-md-6">
+      <label>{{ form.Abreviatura.label }}</label>{{form.Abreviatura }}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %} Datos de Vilsoft {% endblock %}
+{% block activevilsoft%} active show {% endblock %}
+{% block activedatosempresa%} active {% endblock %}
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<form method="post" autocomplete="off">
+				{% csrf_token %}
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-6"><br>
+							<strong>Razón Social:</strong>
+							{{ form.Nombre }}
+							{{ form.Nombre.errors }}
+						</div>
+						<div class="col-md-6"><br>
+							<strong>Nombre Comercial:</strong>
+							{{ form.NickName }}
+							{{ form.NickName.errors }}
+						</div>
+						<div class="col-md-7"><br>
+							<strong>Domicilio fiscal:</strong>
+							{{ form.Direccion }}
+							{{ form.Direccion.errors }}
+						</div>
+						<div class="col-md-5"><br>
+							<strong>WebSite:</strong>
+							{{ form.Website }}
+							{{ form.Website.errors }}
+						</div>
+
+						<div class="col-md-4"><br>
+							<strong>Correo Electrónico:</strong>
+							{{ form.Mail }}
+							{{ form.Mail.errors }}
+						</div>
+						<div class="col-md-4"><br>
+							<strong>Nro Teléfono:</strong>
+							{{ form.Telefono }}
+							{{ form.Telefono.errors }}
+						</div>
+						<div class="col-md-4"><br>
+							<strong>RUC</strong>
+							{{ form.RUC }}
+							{{ form.RUC.errors }}
+						</div>
+						<div class="col-md-12" style='text-align:center;'>
+							<br>
+							<button type="submit" class="btn btn-info btn-fill btn-wd">Guardar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activeclientes %} active show{% endblock %}
+{% block activenuevocliente %} active {% endblock %}
+{% block titulo %}Clientes
+{% endblock %}
+{% block content %}
+	{% if sector and estudio%}
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<a href="{% url 'cotizacion:cabecera' sector estudio %}">
+					<button type="button" class="btn btn-outline-primary btn-icon">
+						<i data-feather="arrow-left"></i> Regresar a Cotización
+					</button>
+				</a>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	<form method="POST">
+		{% csrf_token %}
+		<fieldset>
+			<legend>DATOS EMPRESA</legend>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-9">
+						<div class="form-group">
+							<label><strong>{{ form.RazonSocial.label }}</strong></label>{{form.RazonSocial }}
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label><strong>{{ form.RUC.label }}</strong></label>{{form.RUC }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label><strong>Tipo de Empresa</strong></label>{{form.TipoPersona }}
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>{{ form.Website.label }}</label>{{form.Website }}
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label><strong>{{ form.DireccionLegal.label }}</strong></label>{{form.DireccionLegal }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>DATOS REPRESENTANTE LEGAL</legend>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ form.LegalName.label }}</label>{{form.LegalName }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ form.LegalLastName.label }}</label>{{form.LegalLastName }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Tipo Documento</label>{{form.TipoDocumentoLegal }}
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>{{ form.NroDocumentoLegal.label }}</label>{{form.NroDocumentoLegal }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ form.CorreoElectronico.label }}</label>{{form.CorreoElectronico }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="container">
+			<div class="row">
+				<div class="offset-md-5 col-md-2">
+					<button type="submit" class="btn btn-outline-primary btn-ico">Guardar Cliente</button>
+				</div>
+			</div>
+		</div>
+		{% if cli.id %}
+		<fieldset>
+			<legend>DATOS DEL CONTACTO <a data-toggle="tooltip" data-placement="top" title="Agregar Contactos" href="{% url 'clientes:registrarcontactos' id=cli.id%}"><i class="fas fa-plus-square" style='font-size:14px;'></i></a></legend>
+			<table  id="bftable" class="table table-striped mg-b-0">
+				<thead>
+					<tr>
+						<th scope="col">Nro.</th>
+						<th scope="col">Nombres y Apellidos</th>
+						<th scope="col">Correo</th>
+						<th scope="col">Celular</th>
+						<th scope="col">Lugar de Trabajo</th>
+						<th scope="col" >Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for con in cli.ContactoClientes.all %}
+					<tr>
+
+						<th scope="row">{{ forloop.counter }}</th>
+						<td>{{ con.NombreContacto }} {{ con.ApellidoContacto }}</td>
+						<td>{{ con.CorreoElectronicoContacto }}</td>
+						<td>{{ con.MovilContacto }}</td>
+						<td>{{ con.LugarTrabajo }}</td>
+						<td>
+							<a href="{% url 'clientes:editarcontactos' id=cli.id idcont=con.id%}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar Contacto"><i class="fas fa-pen-nib "></i></a>
+							<a href="{% url 'clientes:deletecontactos' id=cli.id idcont=con.id%}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar Contacto"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+				         </td>
+					<tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</fieldset>
+		{% endif %}
+	</form>
+{% endblock %}

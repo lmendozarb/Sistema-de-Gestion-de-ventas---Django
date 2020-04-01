@@ -1,0 +1,53 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block titulo %} Detalle Proveedores {% endblock %}
+{% block activeproveedor%} active {% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="offset-md-10 col-md-6">
+		<a href="{% url 'proveedores:RegistrarProveedores' %}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Registrar Proveedor</button>
+		</a>
+	</div>
+</div>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+	<thead>
+		<tr>
+			<th scope="col">Razon Social</th>
+			<th scope="col">RUC</th>
+			<th scope="col">Contacto</th>
+			<th scope="col">Correo Electronico</th>
+			<th scope="col">Celular</th>
+			<th scope="col" style="text-align:center">Opcion</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if Proveedor %}
+		{% for pro in Proveedor %}
+		<tr>
+			<td>{{ pro.RazonSocial }}</td>
+			<td>{{ pro.RUC }}</td>
+			<td>{{ pro.NombreContacto }} {{ cli.ApellidoContacto }}</td>
+			<td>{{ pro.CorreoElectronico }}</td>
+			<td>{{ pro.Movil }}</td>
+			<td>
+				<a href="{% url 'proveedores:EditarProveedores' pro.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar"><i class="fas fa-pen-nib "></i></a>
+				{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+				<a href="{% url 'proveedores:DeleteProveedor' pro.id %}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+				{%endif%}
+			</td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		<tr>
+			<td colspan="8" style="text-align:center;">
+				<h3>NO EXISTEN PROVEEDORES</h3>
+			</td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
+{% endblock %}

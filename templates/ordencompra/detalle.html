@@ -1,0 +1,68 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block titulo %}
+Detalle de Ordenes de Compra
+{% endblock %}
+{% block activeorden%} active {% endblock %}
+
+{% block content %}
+{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+<div class="row">
+	<div class="offset-md-9 col-md-6">
+		<a href="{% url 'ordencompra:CreateCompra'%}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Nueva Orden de Compra</button>
+		</a>
+	</div>
+</div>
+{%endif%}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive mg-t-40">
+				<table id="bftable" class="table table-striped mg-b-0" style="width:99%;">
+					<thead>
+						<tr>
+							<th style='text-align:center;'>Nro</th>
+							<th scope="col" style='text-align:center;'>Orden</th>
+							<th scope="col" style='text-align:center;'>Condicion de Venta</th>
+							<th scope="col" style='text-align:center;'>Proveedor</th>
+							<th scope="col" style='text-align:center;'>Estado</th>
+							{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+							<th scope="col" style='text-align:center;'>Opcion</th>
+							{% endif %}
+						</tr>
+					</thead>
+					<tbody>
+						{% if Compra %}
+						{% for qtn in Compra %}
+						<tr>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >{{ forloop.counter }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >{{ qtn }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >{{ qtn.CondicionVenta }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >{{ qtn.Proveedor.RazonSocial }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >{{ qtn.Estado }}</td>
+							{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}' >
+
+								<a href="{% url 'ordencompra:OrdenCompra' qtn.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar"><i class="fas fa-pen-nib "></i></a>
+								<a href="" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+
+							</td>
+							{% endif %}
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="8" style="text-align:center;">
+								<h3>NO EXISTEN ORDENES DE COMPRA</h3>
+							</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

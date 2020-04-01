@@ -1,0 +1,815 @@
+{% load staticfiles %}
+{% load vilsoftextrax %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta name="author" content="Hacklibre">
+	<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+	<title>Vilsoft - {% block title %} Sistema {% endblock %}</title>
+	<link href="{% static 'lib/@fortawesome/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+	<link href="{% static 'lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
+	<link href="{% static 'lib/jqvmap/jqvmap.min.css' %}" rel="stylesheet">
+	<!-- <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rubik:300,400" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/> -->
+	<link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/variablefonts.css' %}">
+	<link rel="stylesheet" href="{% static 'css/dashforge.css' %}">
+	<link rel="stylesheet" href="{% static 'css/dashforge.dashboard.css' %}">
+	{% block css %}
+	{% endblock %}
+</head>
+
+<body>
+	{% block closeneedchangepass %}
+	{% if needchangepass %}
+	<meta http-equiv="refresh" content="0; url={% url 'changeforcepassword' %}">
+	{% endif %}
+	{% endblock %}
+	{% block blocknopass %}
+	<aside class="aside aside-fixed">
+		<div class="aside-header">
+			<a href="../../index.html" class="aside-logo">VIL<span>SOFT</span></a>
+			<a href="" class="aside-menu-link">
+				<i data-feather="menu"></i>
+				<i data-feather="x"></i>
+			</a>
+		</div>
+		<div class="aside-body">
+			<div class="aside-loggedin">
+				<div class="d-flex align-items-center justify-content-start">
+					<a href="" class="avatar"><img src="{{ProfileData.Foto.url}}" class="rounded-circle" alt=""></a>
+					<div class="aside-alert-link">
+						<a href="/accounts/logout/" data-toggle="tooltip" title="Sign out"><i data-feather="log-out"></i></a>
+					</div>
+				</div>
+				<div class="aside-loggedin-user">
+					<a href="#loggedinMenu" class="d-flex align-items-center justify-content-between mg-b-2" data-toggle="collapse">
+						<h6 class="tx-semibold mg-b-0">{{ ProfileData.User.get_full_name }}</h6>
+						<!-- <i data-feather="chevron-down"></i> -->
+					</a>
+					<p class="tx-color-03 tx-12 mg-b-0">{%if Grupo%}{%for g in Grupo%} {{g.name}} {%endfor%}{%else%}Super-Administrador{%endif%}</p>
+				</div>
+				<!-- <div class="collapse" id="loggedinMenu">
+					<ul class="nav nav-aside mg-b-0">
+						<li class="nav-item"><a href="" class="nav-link"><i data-feather="edit"></i> <span>Edit Profile</span></a></li>
+						<li class="nav-item"><a href="" class="nav-link"><i data-feather="user"></i> <span>View Profile</span></a></li>
+						<li class="nav-item"><a href="" class="nav-link"><i data-feather="settings"></i> <span>Account Settings</span></a></li>
+						<li class="nav-item"><a href="" class="nav-link"><i data-feather="help-circle"></i> <span>Help Center</span></a></li>
+						<li class="nav-item"><a href="/accounts/logout/" class="nav-link"><i data-feather="log-out"></i> <span>Sign Out</span></a></li>
+					</ul>
+				</div> -->
+			</div><!-- aside-loggedin -->
+			<ul class="nav nav-aside">
+				<li class="nav-label">Menu</li>
+				<li class="nav-item {% block activedashboard %}{% endblock %}"><a href="{% url 'dashboard' %}" class="nav-link"><i data-feather="globe"></i> <span>Escritorio</span></a></li>
+				<li class="nav-item {% block activecotizacion%}{% endblock %}"><a href="{% url 'cotizaciones:gestionaQTN' %}" class="nav-link"><i data-feather="shopping-bag"></i> <span>Cotizaciones</span></a></li>
+				<li class="nav-item {% block activeitems%}{% endblock %}"><a href="{% url 'items:DetalleProducto' %}" class="nav-link"><i data-feather="pie-chart"></i> <span>Productos</span></a></li>
+				<li class="nav-item {% block activeproveedor%}{% endblock %}"><a href="{% url 'proveedores:DetalleProveedor'%}" class="nav-link"><i data-feather="users"></i> <span>Proveedores</span></a></li>
+				{% if request.user.is_superuser or request.user|has_group:"Administrador" or request.user|has_group:"Jefe de Ventas"%}
+				<li class="nav-item {% block activeorden%}{% endblock %}"><a href="{% url 'ordencompra:DetalleCompra'%}" class="nav-link"><i data-feather="users"></i> <span>Ordenes de Compra</span></a></li>
+				{% endif %}
+				<li class="nav-item {% block activeclientes %}{% endblock %}"><a href="{% url 'clientes:detallecliente' %}" class="nav-link"><i data-feather="user"></i> <span>Clientes</span></a></li>
+				{% if request.user.is_superuser or request.user|has_group:"Administrador" or request.user|has_group:"Jefe de Ventas"%}
+				<li class="nav-item with-sub {% block activegenerales %}{% endblock %}">
+					<a href="" class="nav-link"><i data-feather="file"></i> <span>Generales</span></a>
+					<ul>
+						<li class="{% block activegeneralesdocidentidad %}{% endblock %}"><a href="{% url 'generales:detalledocumento' %}">Tipo de Documentos</a></li>
+						<li class="{% block activeeneralesmonedas %}{% endblock %}"><a href="{% url 'generales:detallemoneda' %}">Monedas</a></li>
+					</ul>
+				</li>
+				<li class="nav-item with-sub {% block activevilsoft %}{% endblock %}">
+					<a href="" class="nav-link"><i data-feather="file"></i> <span>Vilsoft</span></a>
+					<ul>
+						<li class="{% block activedatosempresa %}{% endblock %}"><a href="{% url 'vilsoft:enterprisedata' %}">Datos de Vilsoft</a></li>
+						<li class="{% block activeusuarios %}{% endblock %}"><a href="{% url 'vilsoft:detalleUsuarios'%}">Usuarios</a></li>
+					</ul>
+				</li>
+				{%endif%}
+			</ul>
+		</div>
+	</aside>
+
+	<div class="content ht-100v pd-0">
+		<div class="content-header">
+			<h4 class="mg-b-0 tx-spacing--1">{% block titulo %}Bienvenido{% endblock %}</h4>
+		</div><!-- content-header -->
+
+		<div class="content-body">
+			<div class="container pd-x-0">
+
+				<div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
+					<!-- <div>
+
+		   </div> -->
+					<!-- <div class="d-none d-md-block">
+			 <button class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i data-feather="mail" class="wd-10 mg-r-5"></i> Email</button>
+			 <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5"><i data-feather="printer" class="wd-10 mg-r-5"></i> Print</button>
+			 <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i data-feather="file" class="wd-10 mg-r-5"></i> Generate Report</button>
+		   </div> -->
+				</div>
+				{% block content %}
+				<div class="row row-xs">
+					<div class="col-sm-6 col-lg-3">
+						<div class="card card-body">
+							<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Número de Cotizaciones</h6>
+							<div class="d-flex d-lg-block d-xl-flex align-items-end">
+								<h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">0.81%</h3>
+								<p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">1.2% <i class="icon ion-md-arrow-up"></i></span></p>
+							</div>
+							<div class="chart-three">
+								<div id="flotChart3" class="flot-chart ht-30"></div>
+							</div><!-- chart-three -->
+						</div>
+					</div><!-- col -->
+					<div class="col-sm-6 col-lg-3 mg-t-10 mg-sm-t-0">
+						<div class="card card-body">
+							<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">NÚMERO DE ORDENES DE COMPRA</h6>
+							<div class="d-flex d-lg-block d-xl-flex align-items-end">
+								<h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">3,137</h3>
+								<p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-danger">0.7% <i class="icon ion-md-arrow-down"></i></span></p>
+							</div>
+							<div class="chart-three">
+								<div id="flotChart4" class="flot-chart ht-30"></div>
+							</div><!-- chart-three -->
+						</div>
+					</div><!-- col -->
+					<div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+						<div class="card card-body">
+							<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">VENTAS REALIZADAS</h6>
+							<div class="d-flex d-lg-block d-xl-flex align-items-end">
+								<h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">$306.20</h3>
+								<p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-danger">0.3% <i class="icon ion-md-arrow-down"></i></span></p>
+							</div>
+							<div class="chart-three">
+								<div id="flotChart5" class="flot-chart ht-30"></div>
+							</div><!-- chart-three -->
+						</div>
+					</div><!-- col -->
+					<div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+						<div class="card card-body">
+							<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">ORDENES REALIZADAS</h6>
+							<div class="d-flex d-lg-block d-xl-flex align-items-end">
+								<h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">1,650</h3>
+								<p class="tx-11 tx-color-03 mg-b-0"><span class="tx-medium tx-success">2.1% <i class="icon ion-md-arrow-up"></i></span></p>
+							</div>
+							<div class="chart-three">
+								<div id="flotChart6" class="flot-chart ht-30"></div>
+							</div><!-- chart-three -->
+						</div>
+					</div><!-- col -->
+					<div class="col-lg-8 col-xl-7 mg-t-10">
+						<div class="card">
+							<div class="card-header pd-y-20 d-md-flex align-items-center justify-content-between">
+								<h6 class="mg-b-0">Recurring Revenue Growth</h6>
+								<ul class="list-inline d-flex mg-t-20 mg-sm-t-10 mg-md-t-0 mg-b-0">
+									<li class="list-inline-item d-flex align-items-center">
+										<span class="d-block wd-10 ht-10 bg-df-1 rounded mg-r-5"></span>
+										<span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Growth Actual</span>
+									</li>
+									<li class="list-inline-item d-flex align-items-center mg-l-5">
+										<span class="d-block wd-10 ht-10 bg-df-2 rounded mg-r-5"></span>
+										<span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Actual</span>
+									</li>
+									<li class="list-inline-item d-flex align-items-center mg-l-5">
+										<span class="d-block wd-10 ht-10 bg-df-3 rounded mg-r-5"></span>
+										<span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Plan</span>
+									</li>
+								</ul>
+							</div><!-- card-header -->
+							<div class="card-body pos-relative pd-0">
+								<div class="pos-absolute t-20 l-20 wd-xl-100p z-index-10">
+									<div class="row">
+										<div class="col-sm-5">
+											<h3 class="tx-normal tx-rubik tx-spacing--2 mg-b-5">$620,076</h3>
+											<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-10">MRR Growth</h6>
+											<p class="mg-b-0 tx-12 tx-color-03">Measure How Fast You’re Growing Monthly Recurring Revenue. <a href="">Learn More</a></p>
+										</div><!-- col -->
+										<div class="col-sm-5 mg-t-20 mg-sm-t-0">
+											<h3 class="tx-normal tx-rubik tx-spacing--2 mg-b-5">$1,200</h3>
+											<h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-10">Avg. MRR/Customer</h6>
+											<p class="mg-b-0 tx-12 tx-color-03">The revenue generated per account on a monthly or yearly basis. <a href="">Learn More</a></p>
+										</div><!-- col -->
+									</div><!-- row -->
+								</div>
+
+								<div class="chart-one">
+									<div id="flotChart" class="flot-chart"></div>
+								</div><!-- chart-one -->
+							</div><!-- card-body -->
+						</div><!-- card -->
+					</div>
+					<div class="col-lg-4 col-xl-5 mg-t-10">
+						<div class="card">
+							<div class="card-header pd-t-20 pd-b-0 bd-b-0">
+								<h6 class="mg-b-5">Account Retention</h6>
+								<p class="tx-12 tx-color-03 mg-b-0">Number of customers who have active subscription with you.</p>
+							</div><!-- card-header -->
+							<div class="card-body pd-20">
+								<div class="chart-two mg-b-20">
+									<div id="flotChart2" class="flot-chart"></div>
+								</div><!-- chart-two -->
+								<div class="row">
+									<div class="col-sm">
+										<h4 class="tx-normal tx-rubik tx-spacing--1 mg-b-5">$1,680<small>.50</small></h4>
+										<p class="tx-11 tx-uppercase tx-spacing-1 tx-semibold mg-b-10 tx-primary">Expansions</p>
+										<div class="tx-12 tx-color-03">Customers who have upgraded the level of your products.</div>
+									</div><!-- col -->
+									<div class="col-sm mg-t-20 mg-sm-t-0">
+										<h4 class="tx-normal tx-rubik tx-spacing--1 mg-b-5">$1,520<small>.00</small></h4>
+										<p class="tx-11 tx-uppercase tx-spacing-1 tx-semibold mg-b-10 tx-pink">Cancellations</p>
+										<div class="tx-12 tx-color-03">Customers who have ended their subscription.</div>
+									</div><!-- col -->
+								</div><!-- row -->
+							</div><!-- card-body -->
+						</div><!-- card -->
+					</div>
+					<div class="col-md-6 col-xl-4 mg-t-10">
+						<div class="card ht-100p">
+							<div class="card-header d-flex align-items-center justify-content-between">
+								<h6 class="mg-b-0">Transaction History</h6>
+								<div class="d-flex tx-18">
+									<a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
+									<a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
+								</div>
+							</div>
+							<ul class="list-group list-group-flush tx-13">
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
+									<div class="pd-sm-l-10">
+										<p class="tx-medium mg-b-0">Payment from #10322</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Mar 21, 2019, 3:30pm</small>
+									</div>
+									<div class="mg-l-auto text-right">
+										<p class="tx-medium mg-b-0">+ $250.00</p>
+										<small class="tx-12 tx-success mg-b-0">Completed</small>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-indigo op-5"><i class="icon ion-md-return-left"></i></span></div>
+									<div class="pd-sm-l-10">
+										<p class="tx-medium mg-b-2">Process refund to #00910</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Mar 21, 2019, 1:00pm</small>
+									</div>
+									<div class="mg-l-auto text-right">
+										<p class="tx-medium mg-b-2">-$16.50</p>
+										<small class="tx-12 tx-success mg-b-0">Completed</small>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-orange op-5"><i class="icon ion-md-bus"></i></span></div>
+									<div class="pd-sm-l-10">
+										<p class="tx-medium mg-b-2">Process delivery to #44333</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Mar 20, 2019, 11:40am</small>
+									</div>
+									<div class="mg-l-auto text-right">
+										<p class="tx-medium mg-b-2">3 Items</p>
+										<small class="tx-12 tx-info mg-b-0">For pickup</small>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
+									<div class="pd-sm-l-10">
+										<p class="tx-medium mg-b-0">Payment from #023328</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Mar 20, 2019, 10:30pm</small>
+									</div>
+									<div class="mg-l-auto text-right">
+										<p class="tx-medium mg-b-0">+ $129.50</p>
+										<small class="tx-12 tx-success mg-b-0">Completed</small>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-gray-400"><i class="icon ion-md-close"></i></span></div>
+									<div class="pd-sm-l-10">
+										<p class="tx-medium mg-b-0">Payment failed from #087651</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Mar 19, 2019, 12:54pm</small>
+									</div>
+									<div class="mg-l-auto text-right">
+										<p class="tx-medium mg-b-0">$150.00</p>
+										<small class="tx-12 tx-danger mg-b-0">Declined</small>
+									</div>
+								</li>
+							</ul>
+							<div class="card-footer text-center tx-13">
+								<a href="" class="link-03">View All Transactions <i class="icon ion-md-arrow-down mg-l-5"></i></a>
+							</div><!-- card-footer -->
+						</div><!-- card -->
+					</div>
+					<div class="col-md-6 col-xl-4 mg-t-10">
+						<div class="card ht-100p">
+							<div class="card-header d-flex align-items-center justify-content-between">
+								<h6 class="mg-b-0">New Customers</h6>
+								<div class="d-flex align-items-center tx-18">
+									<a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
+									<a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
+								</div>
+							</div>
+							<ul class="list-group list-group-flush tx-13">
+								<li class="list-group-item d-flex pd-sm-x-20">
+									<div class="avatar"><span class="avatar-initial rounded-circle bg-gray-600">s</span></div>
+									<div class="pd-l-10">
+										<p class="tx-medium mg-b-0">Socrates Itumay</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Customer ID#00222</small>
+									</div>
+									<div class="mg-l-auto d-flex align-self-center">
+										<nav class="nav nav-icon-only">
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="mail"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="slash"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="user"></i></a>
+											<a href="" class="nav-link d-sm-none"><i data-feather="more-vertical"></i></a>
+										</nav>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-x-20">
+									<div class="avatar"><img src="../../assets/img/img23.jpg" class="rounded-circle" alt=""></div>
+									<div class="pd-l-10">
+										<p class="tx-medium mg-b-0">Reynante Labares</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Customer ID#00221</small>
+									</div>
+									<div class="mg-l-auto d-flex align-self-center">
+										<nav class="nav nav-icon-only">
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="mail"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="slash"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="user"></i></a>
+											<a href="" class="nav-link d-sm-none"><i data-feather="more-vertical"></i></a>
+										</nav>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-x-20">
+									<div class="avatar"><img src="../../assets/img/img16.jpg" class="rounded-circle" alt=""></div>
+									<div class="pd-l-10">
+										<p class="tx-medium mg-b-0">Marianne Audrey</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Customer ID#00220</small>
+									</div>
+									<div class="mg-l-auto d-flex align-self-center">
+										<nav class="nav nav-icon-only">
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="mail"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="slash"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="user"></i></a>
+											<a href="" class="nav-link d-sm-none"><i data-feather="more-vertical"></i></a>
+										</nav>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-x-20">
+									<div class="avatar"><span class="avatar-initial rounded-circle bg-indigo op-5">o</span></div>
+									<div class="pd-l-10">
+										<p class="tx-medium mg-b-0">Owen Bongcaras</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Customer ID#00219</small>
+									</div>
+									<div class="mg-l-auto d-flex align-self-center">
+										<nav class="nav nav-icon-only">
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="mail"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="slash"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="user"></i></a>
+											<a href="" class="nav-link d-sm-none"><i data-feather="more-vertical"></i></a>
+										</nav>
+									</div>
+								</li>
+								<li class="list-group-item d-flex pd-x-20">
+									<div class="avatar"><span class="avatar-initial rounded-circle bg-primary op-5">k</span></div>
+									<div class="pd-l-10">
+										<p class="tx-medium mg-b-0">Kirby Avendula</p>
+										<small class="tx-12 tx-color-03 mg-b-0">Customer ID#00218</small>
+									</div>
+									<div class="mg-l-auto d-flex align-self-center">
+										<nav class="nav nav-icon-only">
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="mail"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="slash"></i></a>
+											<a href="" class="nav-link d-none d-sm-block"><i data-feather="user"></i></a>
+											<a href="" class="nav-link d-sm-none"><i data-feather="more-vertical"></i></a>
+										</nav>
+									</div>
+								</li>
+							</ul>
+							<div class="card-footer text-center tx-13">
+								<a href="" class="link-03">View More Customers <i class="icon ion-md-arrow-down mg-l-5"></i></a>
+							</div><!-- card-footer -->
+						</div><!-- card -->
+					</div>
+					<div class="col-md-6 col-xl-4 mg-t-10">
+						<div class="card ht-lg-100p">
+							<div class="card-header d-flex align-items-center justify-content-between">
+								<h6 class="mg-b-0">Real-Time Sales</h6>
+								<ul class="list-inline d-flex mg-b-0">
+									<li class="list-inline-item d-flex align-items-center">
+										<span class="d-block wd-10 ht-10 bg-df-2 rounded mg-r-5"></span>
+										<span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Today</span>
+									</li>
+									<li class="list-inline-item d-flex align-items-center mg-l-10">
+										<span class="d-block wd-10 ht-10 bg-df-3 rounded mg-r-5"></span>
+										<span class="tx-sans tx-uppercase tx-10 tx-medium tx-color-03">Yesterday</span>
+									</li>
+								</ul>
+							</div><!-- card-header -->
+							<div class="card-body pd-b-0">
+								<div class="row mg-b-20">
+									<div class="col">
+										<h5 class="tx-normal tx-rubik tx-spacing--1 mg-b-10">$150,200 <small class="tx-11 tx-success letter-spacing--2"><i class="icon ion-md-arrow-up"></i> 0.20%</small></h5>
+										<p class="tx-10 tx-uppercase tx-spacing-1 tx-medium tx-color-03">Total Sales</p>
+									</div>
+									<div class="col">
+										<h5 class="tx-normal tx-rubik tx-spacing--1 mg-b-10">$21,880 <small class="tx-11 tx-danger letter-spacing--2"><i class="icon ion-md-arrow-down"></i> 1.04%</small></h5>
+										<p class="tx-10 tx-uppercase tx-spacing-1 tx-medium tx-color-03">Avg. Sales Per Day</p>
+									</div>
+								</div><!-- row -->
+								<div class="chart-five">
+									<div><canvas id="chartBar1"></canvas></div>
+								</div>
+							</div><!-- card-body -->
+						</div>
+					</div>
+				</div><!-- row -->
+				{% endblock %}
+			</div><!-- container -->
+		</div>
+		{% endblock %}
+	</div>
+	{% block modal%}
+	{% endblock %}
+	<script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+	<script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'lib/feather-icons/feather.min.js' %}"></script>
+	<script src="{% static 'lib/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+	<script src="{% static 'lib/jquery.flot/jquery.flot.js' %}"></script>
+	<script src="{% static 'lib/jquery.flot/jquery.flot.stack.js' %}"></script>
+	<script src="{% static 'lib/jquery.flot/jquery.flot.resize.js' %}"></script>
+	<script src="{% static 'lib/chart.js/Chart.bundle.min.js' %}"></script>
+	<script src="{% static 'lib/jqvmap/jquery.vmap.min.js' %}"></script>
+	<script src="{% static 'lib/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+
+	<script src="{% static 'js/dashforge.js' %}"></script>
+	<script src="{% static 'js/dashforge.aside.js' %}"></script>
+	<script src="{% static 'js/dashforge.sampledata.js' %}"></script>
+	<script src="{% static 'js/datetables.min.js' %}"></script>
+	<script src="{% static 'js/sweetalert.js' %}"></script>
+	<script src="{% static 'js/plugin.js' %}"></script>
+
+	<!-- append theme customizer -->
+	<script src="{% static 'lib/js-cookie/js.cookie.js' %}"></script>
+
+	<script>
+		{% if messages %}
+		{% for message in messages %}
+		swal({
+			title: "Vilsoft - Notificaciones",
+			text: "{{ message }}",
+			icon: "{{ message.tags }}",
+			button: "Aceptar",
+			timer: 3000,
+		});
+		{% endfor %}
+	 	{% endif %}
+		$(function() {
+			'use strict'
+
+			var plot = $.plot('#flotChart', [{
+				data: df3,
+				color: '#69b2f8'
+			}, {
+				data: df1,
+				color: '#d1e6fa'
+			}, {
+				data: df2,
+				color: '#d1e6fa',
+				lines: {
+					fill: false,
+					lineWidth: 1.5
+				}
+			}], {
+				series: {
+					stack: 0,
+					shadowSize: 0,
+					lines: {
+						show: true,
+						lineWidth: 0,
+						fill: 1
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					aboveData: true
+				},
+				yaxis: {
+					show: false,
+					min: 0,
+					max: 350
+				},
+				xaxis: {
+					show: true,
+					ticks: [
+						[0, ''],
+						[8, 'Jan'],
+						[20, 'Feb'],
+						[32, 'Mar'],
+						[44, 'Apr'],
+						[56, 'May'],
+						[68, 'Jun'],
+						[80, 'Jul'],
+						[92, 'Aug'],
+						[104, 'Sep'],
+						[116, 'Oct'],
+						[128, 'Nov'],
+						[140, 'Dec']
+					],
+					color: 'rgba(255,255,255,.2)'
+				}
+			});
+
+
+			$.plot('#flotChart2', [{
+				data: [
+					[0, 55],
+					[1, 38],
+					[2, 20],
+					[3, 70],
+					[4, 50],
+					[5, 15],
+					[6, 30],
+					[7, 50],
+					[8, 40],
+					[9, 55],
+					[10, 60],
+					[11, 40],
+					[12, 32],
+					[13, 17],
+					[14, 28],
+					[15, 36],
+					[16, 53],
+					[17, 66],
+					[18, 58],
+					[19, 46]
+				],
+				color: '#69b2f8'
+			}, {
+				data: [
+					[0, 80],
+					[1, 80],
+					[2, 80],
+					[3, 80],
+					[4, 80],
+					[5, 80],
+					[6, 80],
+					[7, 80],
+					[8, 80],
+					[9, 80],
+					[10, 80],
+					[11, 80],
+					[12, 80],
+					[13, 80],
+					[14, 80],
+					[15, 80],
+					[16, 80],
+					[17, 80],
+					[18, 80],
+					[19, 80]
+				],
+				color: '#f0f1f5'
+			}], {
+				series: {
+					stack: 0,
+					bars: {
+						show: true,
+						lineWidth: 0,
+						barWidth: .5,
+						fill: 1
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					borderColor: '#edeff6'
+				},
+				yaxis: {
+					show: false,
+					max: 80
+				},
+				xaxis: {
+					ticks: [
+						[0, 'Jan'],
+						[4, 'Feb'],
+						[8, 'Mar'],
+						[12, 'Apr'],
+						[16, 'May'],
+						[19, 'Jun']
+					],
+					color: '#fff',
+				}
+			});
+
+			$.plot('#flotChart3', [{
+				data: df4,
+				color: '#9db2c6'
+			}], {
+				series: {
+					shadowSize: 0,
+					lines: {
+						show: true,
+						lineWidth: 2,
+						fill: true,
+						fillColor: {
+							colors: [{
+								opacity: 0
+							}, {
+								opacity: .5
+							}]
+						}
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					labelMargin: 0
+				},
+				yaxis: {
+					show: false,
+					min: 0,
+					max: 60
+				},
+				xaxis: {
+					show: false
+				}
+			});
+
+			$.plot('#flotChart4', [{
+				data: df5,
+				color: '#9db2c6'
+			}], {
+				series: {
+					shadowSize: 0,
+					lines: {
+						show: true,
+						lineWidth: 2,
+						fill: true,
+						fillColor: {
+							colors: [{
+								opacity: 0
+							}, {
+								opacity: .5
+							}]
+						}
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					labelMargin: 0
+				},
+				yaxis: {
+					show: false,
+					min: 0,
+					max: 80
+				},
+				xaxis: {
+					show: false
+				}
+			});
+
+			$.plot('#flotChart5', [{
+				data: df6,
+				color: '#9db2c6'
+			}], {
+				series: {
+					shadowSize: 0,
+					lines: {
+						show: true,
+						lineWidth: 2,
+						fill: true,
+						fillColor: {
+							colors: [{
+								opacity: 0
+							}, {
+								opacity: .5
+							}]
+						}
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					labelMargin: 0
+				},
+				yaxis: {
+					show: false,
+					min: 0,
+					max: 80
+				},
+				xaxis: {
+					show: false
+				}
+			});
+
+			$.plot('#flotChart6', [{
+				data: df4,
+				color: '#9db2c6'
+			}], {
+				series: {
+					shadowSize: 0,
+					lines: {
+						show: true,
+						lineWidth: 2,
+						fill: true,
+						fillColor: {
+							colors: [{
+								opacity: 0
+							}, {
+								opacity: .5
+							}]
+						}
+					}
+				},
+				grid: {
+					borderWidth: 0,
+					labelMargin: 0
+				},
+				yaxis: {
+					show: false,
+					min: 0,
+					max: 60
+				},
+				xaxis: {
+					show: false
+				}
+			});
+
+			$('#vmap').vectorMap({
+				map: 'usa_en',
+				showTooltip: true,
+				backgroundColor: '#fff',
+				color: '#d1e6fa',
+				colors: {
+					fl: '#69b2f8',
+					ca: '#69b2f8',
+					tx: '#69b2f8',
+					wy: '#69b2f8',
+					ny: '#69b2f8'
+				},
+				selectedColor: '#00cccc',
+				enableZoom: false,
+				borderWidth: 1,
+				borderColor: '#fff',
+				hoverOpacity: .85
+			});
+
+
+			var ctxLabel = ['6am', '10am', '1pm', '4pm', '7pm', '10pm'];
+			var ctxData1 = [20, 60, 50, 45, 50, 60];
+			var ctxData2 = [10, 40, 30, 40, 55, 25];
+
+			// Bar chart
+			var ctx1 = document.getElementById('chartBar1').getContext('2d');
+			new Chart(ctx1, {
+				type: 'horizontalBar',
+				data: {
+					labels: ctxLabel,
+					datasets: [{
+						data: ctxData1,
+						backgroundColor: '#69b2f8'
+					}, {
+						data: ctxData2,
+						backgroundColor: '#d1e6fa'
+					}]
+				},
+				options: {
+					maintainAspectRatio: false,
+					responsive: true,
+					legend: {
+						display: false,
+						labels: {
+							display: false
+						}
+					},
+					scales: {
+						yAxes: [{
+							gridLines: {
+								display: false
+							},
+							ticks: {
+								display: false,
+								beginAtZero: true,
+								fontSize: 10,
+								fontColor: '#182b49'
+							}
+						}],
+						xAxes: [{
+							gridLines: {
+								display: true,
+								color: '#eceef4'
+							},
+							barPercentage: 0.6,
+							ticks: {
+								beginAtZero: true,
+								fontSize: 10,
+								fontColor: '#8392a5',
+								max: 80
+							}
+						}]
+					}
+				}
+			});
+
+		})
+	</script>
+	{% block js %}
+	{% endblock %}
+</body>
+
+</html>

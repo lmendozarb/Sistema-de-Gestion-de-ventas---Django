@@ -1,0 +1,438 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block activecotizacion%} active show{% endblock %}
+{% block activecotizaciongestionarcotizacion%} active {% endblock %}
+{% block titulo %}
+<a href="{% url 'cotizaciones:gestionaQTN' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Gestión de Cotizaciones
+{% endblock %}
+{% block content %}
+<div class="content tx-13">
+	<div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<h4>{{ bou.Asunto|upper }}</h4>
+				</div>
+			</div>
+			{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+			{% if bou.Estado != 'ANULAR' and bou.Estado != 'FACTURADO'%}
+					<div class="col-md-8"></div>
+					<div class="col-md-2">
+						<strong>Opciones:</strong>
+					</div>
+					{% if bou.Estado == 'COTIZACIÓN'%}
+						<div class="col-md-1">
+
+							<a href="{% url 'cotizaciones:ConfirmCotizacion' bou.id %}"><i data-toggle="tooltip" data-placement="top" title="Confirmar Cotización" class="fas fa-check text-success"></i></a>
+						</div>
+					{% elif bou.Estado == 'CONFIRMAR'%}
+						<div class="col-md-1" >
+							<a href="{% url 'cotizaciones:DeconfirmCotizacion' bou.id %}"><i data-toggle="tooltip" data-placement="top" title="Desconfirmar Cotización" class="fas fa-minus text-warning"></i></a>
+						</div>
+					{% endif %}
+					{% if bou.Estado != 'ANULAR' %}
+						<div class="col-md-1" >
+							<a href="{% url 'cotizaciones:AnulateCotizacion' bou.id %}"><i data-toggle="tooltip" data-placement="top" title="Anular Cotización" class="fas fa-times text-danger"></i></a>
+						</div>
+					{% endif %}
+			{% endif %}
+			{%endif%}
+			{% if bou.Estado != 'CONFIRMAR' and bou.Estado != 'ANULAR' and bou.Estado != 'FACTURADO'%}
+			<div class="col-md-12">
+				<div class="form-group">
+					<a href="#modalEdit" data-toggle="modal">
+						<button type="button" class="btn btn-outline-primary"><i class="fas fa-pen-nib"></i> Editar Cotización</button>
+					</a>
+				</div>
+			</div>
+			{% endif %}
+			<div class="col-md-6">
+				<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Señores:</label>
+				<h6 class="tx-15 mg-b-10">{{ bou.Cliente.RazonSocial }}</h6>
+				<p class="mg-b-0">Dirección: {% if bou.Cliente.DireccionLegal is None %}---{% else %}{{ bou.Cliente.DireccionLegal }}{% endif %}</p>
+				<p class="mg-b-0">Correo Electrónico: {% if bou.Cliente.CorreoElectronico is None %}---{% else %}{{ bou.Cliente.CorreoElectronico }}{% endif %}</p>
+			</div>
+			<div class="col-sm-6 tx-right d-none d-md-block">
+				<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Nro. Cotización</label>
+				<h1 class="tx-normal tx-color-04 mg-b-10 tx-spacing--2">{{ bou }}</h1>
+			</div>
+			<div class="col-sm-6 col-lg-8 mg-t-40 mg-sm-t-0 mg-md-t-40">
+				<div class="form-group">
+					<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">En atención</label>&nbsp{% if bou.Estado != 'CONFIRMAR' and bou.Estado != 'ANULAR' and bou.Estado != 'FACTURADO'%}<a href="#modalUsers" data-toggle="modal" class="outline-none"><i class="fas fa-pen-nib"></i></a>{%endif%}
+					{% for area in bou.Cliente.ContactoClientes.all %}
+					{% if area.Principal %}
+					<p class="mg-b-0">
+						<strong>{{ area }}</strong>
+					</p>
+					<p class="mg-b-0">Lugar de trabajo: {% if area.LugarTrabajo is None %}---{% else %}{{ area.LugarTrabajo }}{% endif %} </p>
+					<p class="mg-b-0">Nro. Teléfono: {% if area.MovilContacto is None %}---{% else %}{{ area.MovilContacto }}{% endif %} </p>
+					<p class="mg-b-0">Correo Electrónico: {% if area.CorreoElectronicoContacto is None %}---{% else %}{{ area.CorreoElectronicoContacto }}{% endif %}</p>
+					{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-4 mg-t-40">
+				<div class="form-group">
+					<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información de la Cotización</label>
+					<ul class="list-unstyled lh-7">
+						<li class="d-flex justify-content-between">
+							<span><strong>Nro. de Cotización:</strong>&nbsp;</span>
+							<span>{{ bou }}</span>
+						</li>
+						<li class="d-flex justify-content-between">
+							<span><strong>Fecha de Creación:</strong>&nbsp;</span>
+							<span>{{ bou.FechaCreacion }}</span>
+						</li>
+						<li class="d-flex justify-content-between">
+							<span><strong>Estado:</strong>&nbsp;</span>
+							<span><strong>{{ bou.Estado }}</strong></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">{{ bou.Asunto }} </label>
+					<ul>
+						<li>{{ bou.Descripcion }}</li>
+					</ul>
+
+				</div>
+			</div>
+
+		</div>
+		<div class="table-responsive mg-t-40">
+			<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03"> {% if bou.Estado != 'CONFIRMAR' and bou.Estado != 'ANULAR' and bou.Estado != 'FACTURADO'%}<a data-toggle="modal" data-placement="top" title="Agregar Item" href="#modalItems"><i class="fas fa-plus-square fa-2x"></i></a>{% endif%} <strong>Servicio</strong> </label>
+
+			<div class="table-responsive mg-t-40">
+				<table class="table table-invoice bd-b">
+					<thead>
+						<tr>
+							<th class="wd-20p">Nro</th>
+							<th class="wd-40p d-none d-sm-table-cell">Nombre</th>
+							<th class="tx-center">Cantidad</th>
+							<th class="tx-center">Precio Unitario</th>
+							<th class="tx-right">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						{%for pro in cuerpo%}
+						<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ pro.item.Nombre}}</td>
+						<td class="tx-center">{{ pro.cantidad}}</td>
+						<td class="tx-center">{{ pro.precio}}</td>
+						<td class="tx-right">{% multiproducto pro.cantidad pro.precio%}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+
+			<br><br>
+
+		</div>
+		<div class="row justify-content-between">
+			<div class="col-sm-6 col-lg-4 order-1 order-sm-0">
+				<ul class="list-unstyled lh-7 pd-r-10">
+					<li class="d-flex justify-content-between">
+						<span>Sub-Total</span>
+						<span>{{ subtotal }}</span>
+					</li>
+					<li class="d-flex justify-content-between">
+						<span>IGV (18%)</span>
+						<span>{% calcularigv bou.id subtotal %}</span>
+					</li>
+					<li class="d-flex justify-content-between">
+						<span>Descuento</span>
+						<span>{% if bou.Descuento > 0 %} - {% endif %} {{ bou.Descuento }}&nbsp{% if bou.Estado != 'CONFIRMAR' and bou.Estado != 'ANULAR' and bou.Estado != 'FACTURADO'%}<a href="#modalBillingInfo" data-toggle="modal" class="outline-none">
+								<i class="fas fa-pen-nib"></i>
+							</a>{%endif%}</span>
+					</li>
+					<li class="d-flex justify-content-between">
+						<strong>Total</strong>
+						<strong>{%calculartotal bou.id subtotal%}</strong>
+					</li>
+				</ul>
+			</div><!-- col -->
+		</div><!-- row -->
+	</div><!-- container -->
+	<div class="container-fluid">
+		<div class="row">
+			{% if bou.Estado != 'ANULAR'%}
+			<div class="offset-md-3 col-md-3" style="text-align:right !important;">
+				<a href="{% url 'cotizaciones:CotizacionPDF' id %}"><button type="button" class="btn btn-outline-primary"><i class="far fa-file-pdf" style="font-size:14px;"></i> Exportar Cotización</button></a>
+			</div>
+			<!-- <div class="col-md-3">
+				<a href=""><button type="button" class="btn btn btn-outline-danger"><i class="far fa-paper-plane" style="font-size:14px;"></i> Enviar por Correo</button></a>
+			</div> -->
+			{% if bou.Estado == 'CONFIRMAR'%}
+			<div class="col-md-3">
+				<a href="{% url 'cotizaciones:PagoUrl' id code%}"><button type="button" class="btn btn btn-outline-danger"><i class="far fa-paper-plane" style="font-size:14px;"></i> Generar Venta</button></a>
+			</div>
+			{% endif%}
+			{%endif%}
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+{% block modal%}
+<div class="modal fade" id="modalBillingInfo" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered wd-sm-650" role="document">
+		<div class="modal-content">
+			<form method="POST">
+				{% csrf_token %}
+				<div class="modal-header pd-y-20 pd-x-20 pd-sm-x-30">
+					<a href="" role="button" class="close pos-absolute t-15 r-15" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</a>
+					<div class="media align-items-center">
+						<span class="tx-color-03 d-none d-sm-block"><i data-feather="credit-card" class="wd-60 ht-60"></i></span>
+						<div class="media-body mg-sm-l-20">
+							<h4 class="tx-18 tx-sm-20 mg-b-2">Ingrese un Descuento</h4>
+						</div>
+					</div><!-- media -->
+				</div><!-- modal-header -->
+				<div class="modal-body pd-sm-t-30 pd-sm-b-40 pd-sm-x-30">
+					<div class="form-group">
+						<label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Descuento</label>
+						{{form.Descuento }}
+					</div>
+				</div><!-- modal-body -->
+				<div class="modal-footer pd-x-20 pd-y-15">
+					<button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+<div class="modal fade" id="modalUsers" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pd-20 pd-sm-30">
+				<h4 class="tx-18 tx-sm-20 mg-b-3">Contactos de Cliente</h4>
+				<p class="mg-b-20 tx-color-03">Cambie Contacto Principal</p>
+				<a href="" role="button" class="close pos-absolute t-15 r-15" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</a>
+
+				<div class="">
+
+					<table  id="bftable" class="table table-striped" style="width:100%;">
+						<thead>
+							<tr>
+								<th scope="col">Nro.</th>
+								<th scope="col">Contacto</th>
+								<th scope="col">Correo</th>
+								<th scope="col" style='text-align:center;'>Opción</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							{% for contact in bou.Cliente.ContactoClientes.all %}
+  							{% if contact.Principal %}
+  							{% else %}
+							<tr>
+								<td>{{ forloop.counter }}</td>
+								<td>
+									<div class="media-body pd-l-15">
+										<div class="avatar" style=" float:left;"><img src="{% static 'img/anonimo.png' %}" class="rounded-circle" alt=""></div>
+										<div style="padding-top:10px; padding-left: 10px; float:left;">
+											{{ contact }}
+										</div>
+									</div>
+								</td>
+								<td>{% if contact.CorreoElectronicoContacto is None %}---{% else %}{{ contact.CorreoElectronicoContacto }}{% endif %}</td>
+								<td>
+								  <a href="{% url 'cotizaciones:cambiarContacto' bou.id contact.id%}" class="btn btn-white rounded-circle btn-icon mg-l-15"><i data-feather="plus"></i></a>
+								</td>
+							</tr>
+							{% endif %}
+						   {% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="d-flex justify-content-end mg-t-30">
+					<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+					<a href="#modalNewContact" data-toggle="modal">
+					<button type="button" class="btn btn-primary mg-l-5">Nuevo Contacto</button>
+					</a>
+				</div>
+			</div><!-- modal-body -->
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+<div class="modal fade effect-scale" id="modalEdit" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pd-20 pd-sm-30">
+				<form method="POST">
+					{% csrf_token %}
+					<button type="button" class="close pos-absolute t-15 r-20" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					<h5 class="tx-18 tx-sm-20 mg-b-20" style="text-align:center;">Editar Cotización</h5>
+					<div class="d-sm-flex">
+						<div class="row">
+							<div class="col-md-6">
+								<label>Moneda</label>
+								{{formqnt.Moneda}}
+							</div><!-- form-group -->
+							<div class="col-md-6">
+								<label>Tiempo de Entrega</label>
+								{{formqnt.TiempoEntrega}}
+							</div><!-- form-group -->
+							<div class="col-md-12">
+								<label>Asunto</label>
+								{{formqnt.Asunto}}
+							</div><!-- form-group -->
+							<div class="col-md-12">
+								<label>Descripcion</label>
+								{{formqnt.Descripcion}}
+							</div><!-- form-group -->
+						</div><!-- col -->
+					</div>
+			</div>
+
+			<div class="modal-footer">
+				<div class="wd-100p d-flex flex-column flex-sm-row justify-content-end">
+					<br>
+					<br>
+					<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary mg-b-5 mg-sm-b-0">Guardar</button>
+				</div>
+			</div><!-- modal-footer -->
+			</form>
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+<div class="modal fade effect-scale" id="modalNewContact" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pd-20 pd-sm-30">
+				<form method="POST">
+					{% csrf_token %}
+					<button type="button" class="close pos-absolute t-15 r-20" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="" style="text-align:center;">
+						<span class="tx-color-04"><i data-feather="users" class="wd-40 ht-40 stroke-wd-3 mg-b-20"></i></span>
+					</div>
+					<h5 class="tx-18 tx-sm-20 mg-b-20" style="text-align:center;">Nuevo Contacto</h5>
+					<div class="d-sm-flex">
+						<div class="row">
+							<div class="col-md-6">
+								<label><strong>{{formcon.NombreContacto.label }}</strong></label>
+								{{formcon.NombreContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-6">
+								<label><strong>{{formcon.ApellidoContacto.label }}</strong></label>
+								{{formcon.ApellidoContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-3" style="padding-top:15px;">
+								<label>{{formcon.TipoDocumentoContacto.label }}</label>
+								{{formcon.TipoDocumentoContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-3" style="padding-top:15px;">
+								<label>{{formcon.NroDocumentoContacto.label }}</label>
+								{{formcon.NroDocumentoContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-6" style="padding-top:15px;">
+								<label><strong>{{ formcon.CorreoElectronicoContacto.label }}</strong></label>
+								{{formcon.CorreoElectronicoContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-4" style="padding-top:15px;">
+								<label><strong>{{ formcon.MovilContacto.label }}</strong></label>
+								{{formcon.MovilContacto }}
+							</div><!-- form-group -->
+							<div class="col-md-4" style="padding-top:15px;">
+								<label><strong>{{ formcon.LugarTrabajo.label }}</strong></label>
+								{{formcon.LugarTrabajo }}
+							</div><!-- form-group -->
+							<div class="col-md-4" style="padding-top:15px;">
+								<label>{{ formcon.Cargo.label }}</label>
+								{{formcon.Cargo }}
+							</div><!-- form-group -->
+						</div><!-- col -->
+					</div>
+			</div>
+
+			<div class="modal-footer">
+				<div class="wd-100p d-flex flex-column flex-sm-row justify-content-end">
+					<br>
+					<br>
+					<button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary mg-b-5 mg-sm-b-0">Guardar</button>
+				</div>
+			</div><!-- modal-footer -->
+			</form>
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+<div class="modal fade" id="modalItems" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pd-20 pd-sm-30">
+				<h4 class="tx-18 tx-sm-20 mg-b-3">Servicios</h4>
+				<p class="mg-b-20 tx-color-03">Elegir Producto</p>
+				<a href="" role="button" class="close pos-absolute t-15 r-15" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</a>
+
+				<div class="">
+
+					<table id="bftable2" class="table table-striped mg-b-0">
+						<thead>
+							<tr>
+								<th scope="col">Nro</th>
+								<th scope="col">Codigo</th>
+								<th scope="col">Nombre</th>
+								<th scope="col">Precio</th>
+								<th scope="col">Descripcion</th>
+								<th scope="col" style="text-align:center;">Tipo del Producto</th>
+								<th scope="col">Proveedor</th>
+								<th scope="col" style="text-align:center">Opcion</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% if Producto %}
+						{% for pro in Producto %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ pro }}</td>
+							<td>{{ pro.Nombre }}</td>
+							<td>{{ pro.Precio }}</td>
+							<td>{{ pro.Descripcion }}</td>
+							<td style="text-align:center;">{%if  pro.TipoProducto == 0%} Hardware {%else%} Software {%endif%}</td>
+							<td>{{ pro.ProveedorItem}}</td>
+							<td>
+								 <a href="{% url 'cotizaciones:RegistrarItem' bou.id pro.id %}" data-toggle="" class="btn btn-white rounded-circle btn-icon mg-l-15"><i data-feather="plus"></i></a>
+							</td>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="9" style="text-align:center;">
+								<h3>NO EXISTEN PRODUCTOS</h3>
+							</td>
+						</tr>
+						{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div><!-- modal-body -->
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+
+{%endblock%}

@@ -1,0 +1,23 @@
+{% if Producto %}
+{% for pro in Producto %}
+<tr>
+	<td>{{ forloop.counter }}</td>
+	<td>{{ pro }}</td>
+	<td>{{ pro.Nombre }}</td>
+	<td>{{ pro.Precio }}</td>
+	<td>{{ pro.Descripcion }}</td>
+	<td style="text-align:center;">{%if  pro.TipoProducto == 0%} Hardware {%else%} Software {%endif%}</td>
+	<td>{{ pro.ProveedorItem}}</td>
+	<td>
+		 <!-- <a data-url="{% url 'cotizaciones:RegistrarItem' bou.id pro.id %}" data-toggle="modal" class="btn btn-white rounded-circle btn-icon mg-l-15"><i data-feather="plus"></i></a> -->
+		<button class="btn btn-warning show-form-update" data-url="{% url 'cotizaciones:RegistrarItem' bou.id pro.id %}">
+	</td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+	<td colspan="9" style="text-align:center;">
+		<h3>NO EXISTEN PRODUCTOS</h3>
+	</td>
+</tr>
+{% endif %}

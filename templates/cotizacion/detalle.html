@@ -1,0 +1,64 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block titulo %}
+Detalle de Cotización
+{% endblock %}
+{% block activecotizacion%} active {% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="offset-md-9 col-md-6">
+		<a href="{% url 'cotizaciones:cabeceracotizacion' %}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Nueva Cotizacion</button>
+		</a>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive mg-t-40">
+				<table id="bftable" class="table table-striped mg-b-0" style="width:99%;">
+					<thead>
+						<tr>
+							<th style='text-align:center;'>Nro</th>
+							<th scope="col" style='text-align:center;'>Cotizacion</th>
+							<th scope="col" style='text-align:center;'>Cliente</th>
+							<th scope="col" style='text-align:center;'>Moneda</th>
+							<th scope="col" style='text-align:center;'>Asunto</th>
+							<th scope="col" style='text-align:center;'>Estado</th>
+							<th scope="col" style='text-align:center;'>Opcion</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if CotizacionCabecera %}
+						{% for qtn in CotizacionCabecera %}
+						<tr>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ forloop.counter }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ qtn }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ qtn.Cliente.RazonSocial }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ qtn.Moneda.Denominacion }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ qtn.Asunto }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>{{ qtn.Estado }}</td>
+							<td style='text-align:center; {% backgroundbooking qtn.Estado %}'>
+								<a href="{% url 'cotizaciones:boucher' qtn.id%}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar Cotizacion"><i class="fas fa-pen-nib "></i></a>
+								{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+								<a href="" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar Cotizacion"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+								{%endif%}
+							</td>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="8" style="text-align:center;">
+								<h3>NO EXISTEN COTIZACIONES</h3>
+							</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

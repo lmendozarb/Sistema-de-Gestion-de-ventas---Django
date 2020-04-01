@@ -1,0 +1,39 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}
+<a href="{% url 'ordencompra:DetalleCompra' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Registrar Orden de Compra
+{% endblock %}
+{% block activeorden%} active {% endblock %}
+{% block content %}
+<form method="POST" action="#" enctype="multipart/form-data" autocomplete="Off">
+	{% csrf_token %}
+	<fieldset>
+
+		<div class="container">
+			<input type="hidden" name="ContSerializeQtn" value="0" class="form-control " required="" id="id_ContSerializeQtn">
+			<input type="hidden" name="SerializeQtn" value="0" class="form-control" required="" id="id_SerializeQtn">
+
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Condiciones</label>{{form.CondicionVenta }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Proveedor</label>{{form.Proveedor }}
+						</div>
+					</div>
+					<div class="offset-md-4 col-md-4">
+						<button type="submit" class="btn btn-outline-primary btn-ico">Generar Cabecera</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endblock %}

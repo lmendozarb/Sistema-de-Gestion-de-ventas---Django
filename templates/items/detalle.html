@@ -1,0 +1,93 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block titulo %} Buscar Productos {% endblock %}
+{% block activeitems%} active {% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="offset-md-10 col-md-6">
+		<a href="{% url 'items:RegistroProducto' %}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Registrar Items</button>
+		</a>
+	</div>
+</div>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+	<thead>
+		<tr>
+			<th scope="col">Nro</th>
+			<th scope="col">Codigo</th>
+			<th scope="col">Nombre</th>
+			<th scope="col">Precio</th>
+			<th scope="col">Descripcion</th>
+			<th scope="col">Cantidad</th>
+			<th scope="col" style="text-align:center;">Tipo del Producto</th>
+			<th scope="col">Proveedor</th>
+			<th scope="col">Fecha de Ingreso</th>
+			<th scope="col" style="text-align:center">Opcion</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if Producto %}
+		{% for pro in Producto %}
+		<tr>
+			<td>{{ forloop.counter }}</td>
+			<td>{{ pro }}</td>
+			<td>{{ pro.Nombre }}</td>
+			<td>{{ pro.Precio }}</td>
+			<td>{{ pro.Descripcion }}</td>
+			<td>{{ pro.Cantidad }}</td>
+			<td style="text-align:center;">{%if  pro.TipoProducto == 0%} Hardware {%else%} Software {%endif%}</td>
+			<td>{{ pro.ProveedorItem}}</td>
+			<td>{{ pro.FechaRegistro}}</td>
+			<td>
+				<a href="#modalSplitColumn{{pro.id}}" data-toggle="modal" class='btn btn-outline-info' data-placement="top" title="" data-original-title="Mostrar Item"><i class="fas fa-eye "></i></a>
+				<div class="modal fade" id="modalSplitColumn{{pro.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered mx-wd-sm-650" role="document">
+					<div class="modal-content bd-0 bg-transparent">
+						<div class="modal-body pd-0">
+							<a href="" role="button" class="close pos-absolute t-15 r-15 z-index-10" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</a>
+
+							<div class="row no-gutters">
+								<div class="col-3 col-sm-5 col-md-6 col-lg-5 bg-primary rounded-left">
+									<div class="wd-100p ht-100p">
+										<img src="{{pro.Foto.url}}" class="wd-100p img-fit-cover img-object-top rounded-left" alt="" style="width:280px;height:450px;">
+									</div>
+								</div><!-- col -->
+								<div class="col-9 col-sm-7 col-md-6 col-lg-7 bg-white rounded-right">
+									<div class="ht-100p d-flex flex-column justify-content-center pd-20 pd-sm-30 pd-md-40">
+										<h3 class="tx-16 tx-sm-20 tx-md-24 mg-b-15 mg-md-b-20">{{pro.Nombre}}</h3>
+										<p class="tx-14 tx-md-16 tx-color-02">Tipo de Producto: {%if  pro.TipoProducto == 0%} Hardware {%else%} Software {%endif%}</p>
+										<p class="tx-12 tx-md-13 tx-color-03 mg-b-25">Descripcion: {{pro.Descripcion}}</p>
+										<p class="tx-12 tx-md-13 tx-color-03 mg-b-25">Precio: {{pro.Precio}}</p>
+										<p class="tx-12 tx-md-13 tx-color-03 mg-b-25">Stock: {{pro.Cantidad}}</p>
+									</div>
+								</div><!-- col -->
+							</div><!-- row -->
+						</div><!-- modal-body -->
+					</div><!-- modal-content -->
+				</div><!-- modal-dialog -->
+				</div><!-- modal -->
+				<a href="{% url 'items:EditarProducto' pro.id%}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar item"><i class="fas fa-pen-nib "></i></a>
+				{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+				<a href="{% url 'items:ElminarProducto' pro.id%}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar item"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		<tr>
+			<td colspan="9" style="text-align:center;">
+				<h3>NO EXISTEN PRODUCTOS</h3>
+			</td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
+
+
+
+	{% endblock %}

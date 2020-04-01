@@ -1,0 +1,24 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo%}{% endblock %}
+{% block content%}
+	<div class="container ">
+		<div class="row">
+			<div class="col-12">
+				<div class="wd-300 wd-sm-300 mg-b-30" style='margin:0 auto;'><img src="{% static 'img/delete.png' %}" class="img-fluid" alt=""></div>
+			</div>
+			<div class="col-12" style="text-align:center;">
+				<h1 class="tx-color-01 tx-24 tx-sm-32 tx-lg-36 mg-xl-b-5">{%block nroerror %}40x {% endblock%}- {% block mensajeerror %}Page Not Found{% endblock %}</h1>
+				<h5 class="tx-16 tx-sm-18 tx-lg-20 tx-normal mg-b-20">{%block mensaje %}Oopps. The page you were looking for doesn't exist.{%endblock%}</h5>
+				<a href="#" onclick="goBack()">Regresar</a>
+			</div>
+		</div>
+	</div>
+{% endblock%}
+{% block js %}
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+{% endblock %}

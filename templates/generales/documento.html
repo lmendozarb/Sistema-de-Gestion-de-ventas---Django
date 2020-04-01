@@ -1,0 +1,49 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activegenerales %} active show{% endblock %}
+{% block activegeneralesdocidentidad %} active {% endblock %}
+{% block titulo %}
+<h1 class="df-title">Detalle de Documentos de Identidad</h1>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="offset-md-9 col-md-3">
+    <a href="{% url 'generales:registrardocumento' %}">
+      <button type="button" class="btn btn-outline-primary btn-ico">Registrar Documento de Identidad</button>
+    </a>
+  </div>
+</div>
+<br>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+  <thead>
+    <tr>
+      <th scope="col">Nro</th>
+      <th scope="col">Tipo de Documento</th>
+      <th scope="col">Abreviatura</th>
+      <th scope="col">Opcion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if TipoDocumento %}
+      {% for doc in TipoDocumento %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ doc.Name }}</td>
+      <td>{{ doc.Abreviatura }}</td>
+      <td>
+          <a href="{% url 'generales:editardocumento' id=doc.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar Documento"><i class="fas fa-pen-nib "></i></a>
+          <a href="{% url 'generales:Deletedocumento' id=doc.id %}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar Documento"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+        </td>
+    </tr>
+      {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="8" style="text-align:center;">
+        <h3>NO EXISTEN DOCUMENTOS</h3>
+      </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

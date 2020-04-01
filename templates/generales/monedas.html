@@ -1,0 +1,51 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activegenerales %} active show{% endblock %}
+{% block activeeneralesmonedas %} active {% endblock %}
+{% block titulo %}
+<h1 class="df-title">Detalle de Monedas</h1>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="offset-md-10 col-md-2">
+    <a href="{% url 'generales:registrarmonedas' %}">
+      <button type="button" class="btn btn-outline-primary btn-ico">Registrar Moneda</button>
+    </a>
+  </div>
+</div>
+<br>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+  <thead>
+    <tr>
+      <th scope="col">Nro</th>
+      <th scope="col">Moneda</th>
+      <th scope="col">Signo</th>
+      <th scope="col">Denominacion</th>
+      <th scope="col" style="text-align:center;">Opcion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if Moneda %}
+      {% for mon in Moneda %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ mon.Moneda }}</td>
+      <td>{{ mon.Signo }}</td>
+      <td>{{ mon.Denominacion }}</td>
+      <td>
+          <a href="{% url 'generales:editarmoneda' id=mon.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar Moneda"><i class="fas fa-pen-nib "></i></a>
+          <a href="{% url 'generales:Deletemoneda' id=mon.id %}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar Moneda"><i class="fas fa-trash cursorpointer icon-danger "></i></a>
+        </td>
+    </tr>
+      {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="8" style="text-align:center;">
+        <h3>NO EXISTEN MONEDAS</h3>
+      </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

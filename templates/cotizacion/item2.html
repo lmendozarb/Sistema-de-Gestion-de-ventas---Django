@@ -1,0 +1,24 @@
+<form method='post' data-url="{% url 'cotizaciones:RegistrarItem' id iditem %}" class="update-form">
+	{% csrf_token %}
+	<div class="modal-header pd-y-20 pd-x-20 pd-sm-x-30">
+		<a href="" role="button" class="close pos-absolute t-15 r-15" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</a>
+		<div class="media align-items-center">
+			<div class="media-body mg-sm-l-20">
+				<h4 class="tx-18 tx-sm-20 mg-b-2">Ingrese un cantidad</h4>
+				{{ form.cantidad }}
+			</div>
+		</div><!-- media -->
+	</div><!-- modal-header -->
+	<div class="modal-body pd-sm-t-30 pd-sm-b-40 pd-sm-x-30">
+		<div class="form-group">
+			<label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Cantidad</label>
+
+		</div>
+	</div><!-- modal-body -->
+	<div class="modal-footer pd-x-20 pd-y-15">
+		<button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+		<button type="submit" class="btn btn-primary">Guardar</button>
+	</div>
+</form>

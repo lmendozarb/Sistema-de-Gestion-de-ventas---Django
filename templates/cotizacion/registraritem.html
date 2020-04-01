@@ -1,0 +1,25 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}
+<a href="{% url 'cotizaciones:boucher' id%}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+	Agregar Items
+{% endblock %}
+{% block content %}
+<form method="post">
+	{% csrf_token %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<div class="form-group">
+					<label>Cantidad:</label>{{form.cantidad }}
+				</div>
+			</div>
+			<div class="offset-md-5 col-md-2">
+				<button type="submit" class="btn btn-primary">Registrar</button>
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

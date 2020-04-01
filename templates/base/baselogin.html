@@ -1,0 +1,85 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="author" content="Hacklibre">
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+		<title>Vilsoft - sistema</title>
+		<link href="{% static 'lib/@fortawesome/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+		<link href="{% static 'lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
+		<link rel="stylesheet" href="{% static 'css/dashforge.css' %}">
+		<link rel="stylesheet" href="{% static 'css/dashforge.auth.css' %}">
+	</head>
+	<body>
+		<header class="navbar navbar-header-fixed">
+			<div class="navbar-brand" style="margin:0 auto; padding:5px;">
+
+			</div>
+		</header>
+		<div class="content content-fixed content-auth">
+			<div class="container">
+				<div class="media align-items-stretch justify-content-center ht-100p pos-relative">
+					<div class="media-body align-items-center d-none d-lg-flex">
+						<div class="mx-wd-600">
+							<img src="{% static 'img/img15.png' %}" class="img-fluid" alt="">
+						</div>
+					</div>
+					<div class="sign-wrapper mg-lg-l-50 mg-xl-l-60">
+						<form class="" method="POST">
+							{% csrf_token %}
+							<div class="container">
+								<div class="row" >
+									<div class="col-12" >
+										<h3 class="tx-color-01 mg-b-5">Inicio de Sesion</h3>
+										<p class="tx-color-03 tx-16 mg-b-40">Bienvenido! Ingrese para continuar.</p>
+									</div>
+									<div class="col-12">
+										<div class="form-group">
+											<label>Usuario</label>
+											<input type="text" class="form-control" id="username" name="username" placeholder="Ingrese su usuario">
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="form-group">
+											<label class="mg-b-0-f">Contraseña</label>
+											<input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña">
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="form-group">
+											<button class="btn btn-brand-02 btn-block" type="submit">Ingresar</button>
+										</div>
+									</div>
+									<div class="col-12">
+										<a href="{% url 'password_reset' %}" class="tx-13">Olvidé mi contraseña</a>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+			<div>
+				<span>&copy; {% now "Y" %}</span>
+				<span>Creado por <a href="https://hacklibre.com/">NOSOTROS</a></span>
+			</div>
+			<div>
+				<nav class="nav">
+					<a href="" class="nav-link">Licenses</a>
+					<a href="" class="nav-link">Change Log</a>
+					<a href="" class="nav-link">Get Help</a>
+				</nav>
+			</div>
+		</footer>
+		<script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+		<script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+		<script src="{% static 'lib/feather-icons/feather.min.js' %}"></script>
+		<script src="{% static 'lib/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+		<script src="{% static 'js/dashforge.js' %}"></script>
+		<script src="{% static 'lib/js-cookie/js.cookie.js' %}"></script>
+	</body>
+</html>

@@ -1,0 +1,84 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activeproveedor %} active {% endblock %}
+{% block titulo %}
+<a href="{% url 'proveedores:DetalleProveedor' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a> Registrar Proveedor
+{% endblock %}
+{% block content %}
+	<form method="POST">
+		{% csrf_token %}
+		<fieldset>
+			<legend>DATOS PROVEEDOR</legend>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label><strong>{{ form.RazonSocial.label }}</strong></label>{{form.RazonSocial }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label><strong>{{ form.RUC.label }}</strong></label>{{form.RUC }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label><strong>{{ form.DireccionLegal.label }}</strong></label>{{form.DireccionLegal }}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>DATOS DEL CONTACTO</legend>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>{{ form.NombreContacto.label }}</label>{{form.NombreContacto }}
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>{{ form.ApellidoContacto.label }}</label>{{form.ApellidoContacto }}
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>{{ form.Movil.label }}</label>{{form.Movil }}
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>Tipo Documento</label>{{form.TipoDocumentoProveedor }}
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>{{ form.NroDocumentoProveeedor.label }}</label>{{form.NroDocumentoProveeedor }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ form.CorreoElectronico.label }}</label>{{form.CorreoElectronico }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+		<div class="container">
+			<div class="row">
+				<div class="offset-md-5 col-md-2">
+					<button type="submit" class="btn btn-outline-primary btn-ico">Registrar Proveedor</button>
+				</div>
+			</div>
+		</div>
+</form>
+{% endblock %}

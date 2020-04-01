@@ -1,0 +1,41 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block activegenerales %} active {% endblock %}
+{% block activeeneralesmonedas %} active {% endblock %}
+{% block titulo %}
+<h1 class="df-title">Nueva Moneda</h1>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <a href="{% url 'generales:detallemoneda'%}">
+        <button type="button" class="btn btn-outline-primary btn-icon">
+          <i data-feather="arrow-left"></i> Regresar
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>{{ form.Moneda.label }}</label>{{form.Moneda }}
+    </div>
+    <div class="form-group col-md-6">
+      <label>{{ form.Plural.label }}</label>{{form.Plural }}
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6" >
+      <label>{{ form.Denominacion.label }}</label>{{form.Denominacion }}
+    </div>
+    <div class="form-group col-md-6">
+      <label>{{ form.Signo.label }}</label>{{form.Signo }}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load staticfiles %}
+{% load vilsoftextrax %}
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<table style='width:100%; border-spacing: 0px; border-collapse: separate;'>
+			<tr>
+				<td>
+					<img  style="width:130px;height:89px;" src="https://i.imgur.com/MCzsPs0.png" />
+				</td>
+				<td style='font-family: "calibrilight"; vertical-align:bottom; text-align:right;'>
+					San Borja, {{compra.FechaCreacion}}<br>
+					Cotización Nro: <strong>{{compra}}</strong>
+				</td>
+			</tr>
+			<tr>
+
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información de la Orden de Compra</label>
+					<ul class="list-unstyled lh-7">
+						<li class="d-flex justify-content-between">
+							<span><strong>Nro. de Orden:</strong>&nbsp;</span>
+							<span>{{ compra }}</span>
+						</li>
+						<li class="d-flex justify-content-between">
+							<span><strong>Fecha de Creación:</strong>&nbsp;</span>
+							<span>{{ compra.FechaCreacion }}</span>
+						</li>
+						<li class="d-flex justify-content-between">
+							<span><strong>Estado:</strong>&nbsp;</span>
+							<span><strong>{{ compra.Estado }}</strong></span>
+						</li>
+						<li class="d-flex justify-content-between">
+							<span><strong>Proveedor:</strong>&nbsp;</span>
+							<span><strong>{{ compra.Proveedor }}</strong></span>
+						</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style=''>
+					<table width="100%" style='border:1px solid #000080; border-spacing: 0px; border-collapse: separate;'>
+						<thead>
+							<tr>
+								<th style='border-bottom:1px solid #000080;width:10%;color:white; background:#0168fa; padding:3px;'></th>
+								<th style='border-bottom:1px solid #000080;border-left:1px solid #000080; width:70%;color:white; background:#0168fa; padding:3px;'><strong>Nombre del Producto</strong> </th>
+								<th style='border-bottom:1px solid #000080;border-left:1px solid #000080; width:70%;color:white; background:#0168fa; padding:3px;'><strong>Cantidad</strong> </th>
+								<th style='border-bottom:1px solid #000080;border-left:1px solid #000080; width:70%;color:white; background:#0168fa; padding:3px;'><strong>Precio del Producto</strong> </th>
+								<th style='border-bottom:1px solid #000080; border-left:1px solid #000080; width:20%;color:white; background:#0168fa; padding:3px;'><strong>Precio Total(S/)</strong> </th>
+							</tr>
+						</thead>
+						<tbody>
+							{%for pro in Item%}
+								<tr>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:center;'>{{ forloop.counter }}</td>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:center;'>{{ pro.Item.Nombre}}</td>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:center;'>{{ pro.Cantidad}}</td>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:justify;'>{{ pro.Item.PrecioCompra}}</td>
+									<td style='padding:3px; border-bottom:1px solid #000080;  text-align:center;'>{% multiproducto pro.Cantidad pro.Item.PrecioCompra%}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>SUBTOTAL</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{{ subtotal }}</strong></td>
+							</tr>
+							<tr>
+								<td colspan="4" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>IGV</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{% calcularigvODE compra.id subtotal %}</strong></td>
+							</tr>
+							<tr>
+								<td colspan="4" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>TOTAL</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{%calculartotalODE compra.id subtotal%}</strong></td>
+							</tr>
+						</tfoot>
+					</table>
+				</td>
+				<tr>
+					<td colspan="2" style='text-align:center; margin:0 auto;'>
+						<p style='height:50px; text-align:center;'>
+							<img  style="width:200px;height:136px;" src="https://i.imgur.com/tADV2JI.png" />
+						</p>
+						<p style='text-align:center; margin:0 auto; width:300px;'>
+							Paul Gustavo Villagra Huisa<br>
+							Gerente General - Vilsoft SAC<br>
+							<br>
+						</p>
+					</td>
+				</tr>
+			</tr>
+		</table>
+		<header>
+			soporte@vilsoft.com&nbsp;&nbsp;&nbsp;ventas@vilsoft.com&nbsp;&nbsp;&nbsp;www.vilsoft.com
+		</header>
+	</body>
+</html>

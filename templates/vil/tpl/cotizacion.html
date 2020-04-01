@@ -1,0 +1,102 @@
+{% load staticfiles %}
+{% load vilsoftextrax %}
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<table style='width:100%; border-spacing: 0px; border-collapse: separate;'>
+			<tr>
+				<td>
+					<img  style="width:130px;height:89px;" src="https://i.imgur.com/MCzsPs0.png" />
+				</td>
+				<td style='font-family: "calibrilight"; vertical-align:bottom; text-align:right;'>
+					San Borja, {{bou.FechaRegistro}}<br>
+					Cotización Nro: <strong>{{bou}}</strong>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<p>Señores:<br><strong>{{ bou.Cliente }}</strong></p>
+					<p>Atencion: <strong>
+						{% for area in bou.Cliente.ContactoClientes.all %}
+							{% if area.Principal %}
+								{{ area }}
+							{% endif %}
+						{% endfor %}
+					</strong></p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<p style='text-align:center;'><strong>Propuesta Técnica Económica <br>
+						{{bou.Asunto}}</strong>
+					</p>
+					<p style='text-align:justify;'>
+						{{bou.Descripcion}}
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style=''>
+					<p><strong>Costo de Servicio</strong></p>
+					<table width="100%" style='border:1px solid #000080; border-spacing: 0px; border-collapse: separate;'>
+						<thead>
+							<tr>
+								<th style='border-bottom:1px solid #000080;width:10%;color:white; background:#0168fa; padding:3px;'></th>
+								<th style='border-bottom:1px solid #000080;border-left:1px solid #000080; width:70%;color:white; background:#0168fa; padding:3px;'><strong>Nombre del Producto</strong> </th>
+								<th style='border-bottom:1px solid #000080; border-left:1px solid #000080; width:20%;color:white; background:#0168fa; padding:3px;'><strong>Precio Total(S/)</strong> </th>
+							</tr>
+						</thead>
+						<tbody>
+							{%for pro in cuerpo%}
+								<tr>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:center;'>{{ forloop.counter }}</td>
+									<td style='padding:3px; border-right:1px solid #000080; border-bottom:1px solid #000080; text-align:justify;'>{{ pro.item.Nombre }}</td>
+									<td style='padding:3px; border-bottom:1px solid #000080;  text-align:center;'>{% multiproducto pro.cantidad pro.precio%}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>SUBTOTAL</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{{ subtotal }}</strong></td>
+							</tr>
+							<tr>
+								<td colspan="2" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>IGV</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{% calcularigv bou.id subtotal%}</strong></td>
+							</tr>
+							{% if bou.Descuento > 0 %}
+							<tr>
+								<td colspan="2" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>DESCUENTO</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{{ bou.Descuento }}</strong></td>
+							</tr>
+							{% endif %}
+							<tr>
+								<td colspan="2" style='border-right:1px solid #000080; color:white; background:#0168fa;text-align:center;'> <strong>TOTAL</strong> </td>
+								<td style='color:white; background:#0168fa; text-align:center;'>	<strong>{% calculartotal bou.id subtotal %}</strong></td>
+							</tr>
+						</tfoot>
+					</table>
+				</td>
+				<tr>
+					<td colspan="2" style='text-align:center; margin:0 auto;'>
+						<p style='height:50px; text-align:center;'>
+							<img  style="width:200px;height:136px;" src="https://i.imgur.com/tADV2JI.png" />
+						</p>
+						<p style='text-align:center; margin:0 auto; width:300px;'>
+							Paul Gustavo Villagra Huisa<br>
+							Gerente General - Vilsoft SAC<br>
+							<br>
+						</p>
+					</td>
+				</tr>
+			</tr>
+		</table>
+		<header>
+			soporte@vilsoft.com&nbsp;&nbsp;&nbsp;ventas@vilsoft.com&nbsp;&nbsp;&nbsp;www.vilsoft.com
+		</header>
+	</body>
+</html>

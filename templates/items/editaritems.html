@@ -1,0 +1,70 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}
+<a href="{% url 'items:DetalleProducto' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Editar Items
+ {% endblock %}
+{% block activeitems%} active {% endblock %}
+{% block content %}
+<form method="POST" action="#" enctype="multipart/form-data" autocomplete="Off">
+	{% csrf_token %}
+	<fieldset>
+
+		<div class="container">
+			<input type="hidden" name="SerializeProducto" value="0" class="form-control " required="" id="id_SerializeProducto">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>Nombre del Producto</strong></label>{{form.Nombre }}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>Proveedor</strong></label>{{form.ProveedorItem }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>Tipo del Producto</strong></label>{{form.TipoProducto }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Precio de Venta</label>{{form.Precio }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Precio de Compra</label>{{form.PrecioCompra }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label><strong>Imagen</strong></label>{{form.Foto }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label><strong>Descripcion del Producto</strong></label>{{form.Descripcion }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+
+	<div class="container">
+		<div class="row">
+			<div class="offset-md-5 col-md-2">
+				<button type="submit" class="btn btn-outline-primary btn-ico">Guardar Item</button>
+			</div>
+		</div>
+	</div>
+
+</form>
+{% endblock %}

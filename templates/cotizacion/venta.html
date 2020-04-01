@@ -1,0 +1,191 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block activecotizacion%} active show{% endblock %}
+{% block activecotizaciongestionarcotizacion%} active {% endblock %}
+{% block titulo %}
+<a href="" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Generar Venta
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/hlpu.css' %}">
+<link rel="stylesheet" href="{% static 'css/WaitMe.min.css' %}">
+{% endblock %}
+{% block content %}
+<!-- <div class="main">
+	<h1>PAGO URL <img src='{% static "images/hacklibre.png" %}'></h1>
+	<div class="content">
+		<script src="{% static 'js/easyResponsiveTabs.js' %}"></script>
+		<script>
+			$(document).ready(function() {
+				$('#horizontalTab').easyResponsiveTabs({
+					type: 'default',
+					width: 'auto',
+					fit: true
+				});
+			});
+		</script>
+		<div class="sap_tabs">
+			<div id="horizontalTab2" style="display: block; width: 100%; margin: 0px;">
+				<div class="pay-tabs">
+					<h2>Información de Pago</h2>
+					<label style='color:#c83737;'><strong>Denominación:</strong></label> <span>
+						{{ item.NombrePago }}
+						<input type="hidden" id='denomination' name="denomination" value="">
+						<input type="hidden" id='CodigoPublico' name="CodigoPublico" value="">
+					</span><br>
+					<label style='color:#c83737;'><strong>Monto a depositar:</strong></label> <span>
+						S/ {{ item.Monto }} SOLES
+						<input type="hidden" id="amount" name="amount" value="">
+					</span>&nbsp;&nbsp;&nbsp;
+
+					<label style='color:#c83737;'><strong>Estado de pago:</strong></label>
+					{% if item.EstadoPago %}
+					<span style='background:green; color:white;'>PAGADO</span>
+					{% else %}
+					<span style='background:red; color:white;'>NO PAGADO</span>
+					{% endif %}
+					<style media="screen">
+						input {
+							color: black !important;
+						}
+					</style>
+					<div class="sap_tabs">
+						<div id="horizontalTab" style="display: block; width: 100%; margin: 0px;" readonly='readonly'>
+							{% if item.EstadoPago %}
+							<div class="pay-tabs">
+								<h2>Pago realizado satisfactorimente</h2>
+								<label style='color:#c83737;'><strong>Fecha de Pago:</strong></label> <span>
+									{{ item.FechaPago }}
+								</span><br>
+								<label style='color:#c83737;'><strong>Monto Pagado:</strong></label> <span>
+									S/ {{ item.Monto }} SOLES
+									<input type="hidden" id="amount" name="amount" value="{{ item.Monto }}">
+								</span>&nbsp;&nbsp;&nbsp;
+								<label style='color:#c83737;'><strong>Código de Referencia:</strong></label>
+								{{ item.CodigoReferencia }}<br>
+							</div>
+							<div class="tab-for">
+								<div style="padding:0px !important; text-align:center; padding-top:15px;">
+									<h3 style="color:#c83737;">SI NO TE LLEGO EL CORREO DE CONFIRMACIÓN QUIZA DEBAS REVISAR TU BANDEJA SPAM.</h3>
+								</div>
+							</div>
+							{% else %}
+							<div class="pay-tabs">
+								<h2>Métodos de Pagos</h2>
+								<ul class="resp-tabs-list">
+									<li class="resp-tab-item" aria-controls="tab_item-0" role="tab"><span><label class="pic1"></label>Tarjeta Débito/Crédito</span></li>
+									<li class="resp-tab-item" aria-controls="tab_item-x" role=""><span><label class="pic3"></label>Depósito Bancario</span></li>
+									<li class="resp-tab-item" aria-controls="tab_item-x" role=""><span><label class="pic4"></label>Pago<br>PayPal</span></li>
+									<div class="clear"></div>
+								</ul>
+							</div>
+							<div class="resp-tabs-container">
+								<div class="tab-1 resp-tab-content" aria-labelledby="tab_item-0">
+									<div class="payment-info">
+										<h3>Pago</h3>
+										<form method="POST" class="post-form" autocomplete="off">
+											<input type="hidden" name="" value="{{ csrf_token }}" id="csrf">
+											<input type="button" value="REALIZAR PAGO" style="width:100%; color:white !important;" id="PagoHacklibreURL">
+											<div class="tab-for">
+												 <h5 style='color:#c83737; font-weight:bold;'>Al realizar el pago acepta los TERMINOS Y CONDICIONES.</h5>
+												<div style="padding:0px !important; text-align:center; padding-top:15px;">
+													<h3 style="color:#c83737;">Hacklibre no guarda la Información de sus tarjetas.</h3>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="tab-1 resp-tab-content" aria-labelledby="tab_item-1">
+									<div class="payment-info">
+										<h3>Depósito Bancario</h3>
+										<strong>proximamente...</strong>
+									</div>
+								</div>
+								<div class="tab-1 resp-tab-content" aria-labelledby="tab_item-2">
+									<div class="payment-info">
+										<h3>PayPal</h3>
+										<strong>proximamente...</strong>
+									</div>
+								</div>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+<div class="row">
+	<div class="col-sm-6">
+		<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Vendedor</label>
+		{% for empresa in vilsoft %}
+		<h6 class="tx-15 mg-b-10">{{empresa.Nombre}}</h6>
+		<p class="mg-b-0">RUC: {{empresa.RUC}}</p>
+		<p class="mg-b-0">Dirección: {{empresa.Direccion}}</p>
+		<p class="mg-b-0">Tel No: {{empresa.Telefono}}</p>
+		<p class="mg-b-0">Email: {{empresa.Mail}}</p>
+		{% endfor %}
+	</div><!-- col -->
+	<div class="col-sm-6 tx-right d-none d-md-block">
+		<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Monto a Pagar</label>
+		<h1 class="tx-normal tx-color-04 mg-b-10 tx-spacing--2">S/ {{ item.Monto }} SOLES</h1>
+	</div><!-- col -->
+	<div class="col-sm-6 col-lg-8 mg-t-40 mg-sm-t-0 mg-md-t-40">
+		<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Cliente</label>
+		<h6 class="tx-15 mg-b-10">{{item.Cliente}}</h6>
+		<p class="mg-b-0">Dirección: {{item.Cliente.DireccionLegal}}</p>
+		<p class="mg-b-0">RUC: {{item.Cliente.RUC}}</p>
+		<p class="mg-b-0">Email: {{item.Cliente.CorreoElectronico}}</p>
+	</div><!-- col -->
+	<div class="col-sm-6 col-lg-4 mg-t-40">
+		<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información</label>
+		<ul class="list-unstyled lh-7">
+			<li class="d-flex justify-content-between">
+				<span>Número de Venta:</span>
+				<span></span>
+			</li>
+			<li class="d-flex justify-content-between">
+				<span>Cotización:</span>
+				<span>{{item.cabecera}}</span>
+			</li>
+			<li class="d-flex justify-content-between">
+				<span>Estado:</span>
+				{% if item.EstadoPago %}
+				<span style='background:green; color:white;'>PAGADO</span>
+				{% else %}
+				<span style='background:red; color:white;'>NO PAGADO</span>
+				{% endif%}
+			</li>
+			<li class="d-flex justify-content-between">
+				<span>Fecha de Registro:</span>
+				<span>{{item.FechaRegistro |date:'d-m-Y'}}</span>
+			</li>
+		</ul>
+	</div><!-- col -->
+</div><!-- row -->
+<div class="pay-tabs">
+	<h2>Métodos de Pagos</h2>
+	<div class="col-md-3">
+		<div class="card">
+			<div class="custom-control custom-checkbox" style="padding:0px;">
+				<div class="form-check" style="padding:0px;">
+					<label class="form-check-label" style="cursor:pointer;">
+						<input type="radio" id="Sector-{{ sec.id }}" class="rbtn" name="sector" value="{{ sec.id }}">
+						<img src="{% static 'img/pic2.png' %}" class="card-img-top" alt="...">
+						<div class="card-body">
+							<h6 class="card-title">Tarjeta Débito/Crédito</h6>
+						</div>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block modal%}
+{%endblock%}

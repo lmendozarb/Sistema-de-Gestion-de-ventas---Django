@@ -1,0 +1,58 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}
+<a href="{% url 'cotizaciones:gestionaQTN' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+	Detalle Cotizacion
+{% endblock %}
+{% block content %}
+	<form method="post">
+		{% csrf_token %}
+		<fieldset>
+			<legend>Datos de la Cotización</legend>
+			<input type="hidden" name="ContSerializeQtn" value="0" class="form-control " required="" id="id_ContSerializeQtn">
+			<input type="hidden" name="SerializeQtn" value="0" class="form-control" required="" id="id_SerializeQtn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<a href=""><i class="fas fa-plus-square"></i>
+							</a>
+							<label>Cliente</label>
+							<input type="text" name="Cliente" list='ClienteList' class="form-control" id="id_Cliente" value="{{cli.Clientes.id}}-{{cli.Clientes.RazonSocial}}">
+							<datalist id="ClienteList">
+								{% for v in cliente %}
+									<option value="{{ v.id  }}-{{ v.RazonSocial }}">
+								{% endfor %}
+							</datalist>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label>{{ form.Moneda.label }}</label>{{form.Moneda }}
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>{{ form.TiempoEntrega.label }}</label>{{form.TiempoEntrega }}
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label><strong>{{ form.Asunto.label }}</strong></label>{{form.Asunto }}
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>{{ form.Descripcion.label }}</label>{{form.Descripcion }}
+						</div>
+					</div>
+					<div class="offset-md-4 col-md-4">
+						<button type="submit" class="btn btn-outline-primary btn-ico">Guardar Cotización</button>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+{% endblock %}

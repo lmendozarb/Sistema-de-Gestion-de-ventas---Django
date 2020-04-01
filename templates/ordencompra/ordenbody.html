@@ -1,0 +1,166 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block titulo %}
+<a href="{% url 'ordencompra:DetalleCompra' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Orden de Compra
+{% endblock %}
+{% block activeorden%} active {% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6 col-lg-4 mg-t-40">
+		<div class="form-group">
+			<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Información de la Orden de Compra</label>
+			<ul class="list-unstyled lh-7">
+				<li class="d-flex justify-content-between">
+					<span><strong>Nro. de Orden:</strong>&nbsp;</span>
+					<span>{{ Compra }}</span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<span><strong>Fecha de Creación:</strong>&nbsp;</span>
+					<span>{{ Compra.FechaCreacion }}</span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<span><strong>Estado:</strong>&nbsp;</span>
+					<span><strong>{{ Compra.Estado }}</strong></span>
+				</li>
+				<li class="d-flex justify-content-between">
+					<span><strong>Proveedor:</strong>&nbsp;</span>
+					<span><strong>{{ Compra.Proveedor }}</strong></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="row">
+	{% if Compra.Estado != 'ANULAR' and Compra.Estado != 'FACTURADO'%}
+			<div class="col-md-2">
+				<strong>Opciones:</strong>
+			</div>
+			{% if bou.Estado != 'ANULAR' %}
+				<div class="col-md-1" >
+					<a href="{% url 'ordencompra:AnulateOrden' Compra.id %}"><i data-toggle="tooltip" data-placement="top" title="Anular Cotización" class="fas fa-times text-danger"></i></a>
+				</div>
+			{% endif %}
+			<div class="col-md-8"></div>
+	{% endif %}
+</div>
+<div class="table-responsive mg-t-40">
+	<label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03"> {% if Compra.Estado != 'ANULAR' and Compra.Estado != 'FACTURADO'%}<a data-toggle="modal" data-placement="top" title="Agregar Item" href="#modalItems"><i class="fas fa-plus-square fa-2x"></i></a>{% endif %} <strong>Agregar Productos</strong> </label>
+
+	<div class="table-responsive mg-t-40">
+		<table class="table table-invoice bd-b">
+			<thead>
+				<tr>
+					<th class="wd-20p">Nro</th>
+					<th class="wd-40p d-none d-sm-table-cell">Producto</th>
+					<th class="tx-center">Cantidad</th>
+					<th class="tx-center">Precio Unitario</th>
+					<th class="tx-right">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for pro in Item%}
+				<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{{ pro.Item.Nombre}}</td>
+				<td class="tx-center">{{ pro.Cantidad}}</td>
+				<td class="tx-center">{{ pro.Item.PrecioCompra}}</td>
+				<td class="tx-right">{% multiproducto pro.Cantidad pro.Item.PrecioCompra%}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="" style="padding-left:900px">
+	<ul class="list-unstyled lh-7 pd-r-10">
+		<li class="d-flex justify-content-between">
+			<span>Sub-Total</span>
+			<span>{{subtotal}}</span>
+		</li>
+		<li class="d-flex justify-content-between">
+			<span>IGV (18%)</span>
+			<span>{% calcularigvODE Compra.id subtotal %}</span>
+		</li>
+
+		<li class="d-flex justify-content-between">
+			<strong>Total</strong>
+			<strong>{%calculartotalODE Compra.id subtotal%}</strong>
+		</li>
+		{% if Item%}
+			{% if Compra.Estado != 'ANULAR' and Compra.Estado != 'FACTURADO'%}
+			<li class="d-flex justify-content-between">
+				<a href="{% url 'ordencompra:CierreOrden' Compra.id%}">
+				<button class="btn btn-block btn-primary">Generar Orden de Compra</button>
+				</a>
+			</li>
+			{%else%}
+			<li class="d-flex justify-content-between">
+				<a href="{% url 'ordencompra:OdenPDF' Compra.id%}">
+				<button class="btn btn-block btn-primary">Generar PDF</button>
+				</a>
+			</li>
+			{%endif%}
+		{%endif%}
+	</ul>
+	</div>
+
+</div>
+{% endblock %}
+{% block modal%}
+<div class="modal fade" id="modalItems" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body pd-20 pd-sm-30">
+				<h4 class="tx-18 tx-sm-20 mg-b-3">Productos</h4>
+				<p class="mg-b-20 tx-color-03">Elegir Producto</p>
+				<a href="" role="button" class="close pos-absolute t-15 r-15" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</a>
+
+				<div class="">
+
+					<table id="bftable2" class="table table-striped mg-b-0">
+						<thead>
+							<tr>
+								<th scope="col">Nro</th>
+								<th scope="col">Codigo</th>
+								<th scope="col">Nombre</th>
+								<th scope="col">Precio</th>
+								<th scope="col" style="text-align:center;">Tipo del Producto</th>
+								<th scope="col" style="text-align:center">Opcion</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						{% if producto %}
+						{% for pro in producto %}
+						<tr>
+							<td>{{ forloop.counter }}</td>
+							<td>{{ pro }}</td>
+							<td>{{ pro.Nombre }}</td>
+							<td>{{ pro.PrecioCompra }}</td>
+							<td style="text-align:center;">{%if  pro.TipoProducto == 0%} Hardware {%else%} Software {%endif%}</td>
+							<td>
+								 <a href="{% url 'ordencompra:RegistrarItem' Compra.id pro.id %}" data-toggle="" class="btn btn-white rounded-circle btn-icon mg-l-15"><i data-feather="plus"></i></a>
+
+							</td>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="9" style="text-align:center;">
+								<h3>NO EXISTEN PRODUCTOS</h3>
+							</td>
+						</tr>
+						{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div><!-- modal-body -->
+		</div><!-- modal-content -->
+	</div><!-- modal-dialog -->
+</div><!-- modal -->
+{% endblock%}

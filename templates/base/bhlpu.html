@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Vilsoft - {% block title %} Sistema {% endblock %}</title>
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="{% static 'css/hlpu.css' %}" rel="stylesheet" type="text/css" media="all" />
+		<link href="{% static 'css/waitMe.min.css' %}" rel="stylesheet" type="text/css" media="all" />
+		<link href='https://fonts.googleapis.com/css?family=Fugaz+One' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,800,800italic,900,900italic' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+		<script src="{% static 'js/jquery.minhlpu.js' %}"></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+		<script src="https://m.servedby-buysellads.com/monetization.js"></script>
+		<script src="https://checkout.culqi.com/plugins/v2"></script>
+		<script src="{% static 'js/hlpu.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/waitMe.min.js' %}"></script>
+	</head>
+	<body>
+		<div class="main">
+			<h1>PAGO URL</h1>
+			<div class="content">
+				<script src="{% static 'js/easyResponsiveTabs.js' %}"></script>
+				<script> $(document).ready(function() { $('#horizontalTab').easyResponsiveTabs({ type: 'default', width: 'auto', fit: true }); }); </script>
+				<div class="sap_tabs">
+					<div id="horizontalTab2" style="display: block; width: 100%; margin: 0px;">
+						<div class="pay-tabs">
+							<h2>Información de Pago</h2>
+							{% block infopago %}
+							{% endblock %}
+						</div>
+					</div>
+				</div>
+				{% block metodopago %}
+				{% endblock %}
+			</div>
+			<p class="footer"> Vilsoft © copyright 2019 | Todos los derechos reservados | Impulsado por <a target="_blank" href="">Vilsoft</a></p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% load vilsoftextrax %}
+{% block activeclientes %} active {% endblock %}
+{% block titulo %} Mantener Clientes {% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="offset-md-10 col-md-6">
+		<a href="{% url 'clientes:registrarclientes' %}">
+			<button type="button" class="btn btn-outline-primary btn-ico">Nuevo Cliente</button>
+		</a>
+	</div>
+</div>
+<br>
+<table id="bftable" class="table table-striped mg-b-0">
+	<thead>
+		<tr>
+			<th scope="col">Razon Social</th>
+			<th scope="col">RUC</th>
+			<th scope="col">Representate Legal</th>
+			<th scope="col">Correo Electronico</th>
+			<th scope="col">Website</th>
+			<th scope="col" style="text-align:center">Opcion</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if Clientes %}
+		{% for cli in Clientes %}
+		<tr>
+			<td>{{ cli.RazonSocial }}</td>
+			<td>{{ cli.RUC }}</td>
+			<td>{{ cli.LegalName }} {{ cli.LegalLastName }}</td>
+			<td>{{ cli.CorreoElectronico }}</td>
+			<td>{{ cli.Website }}</td>
+			<td>
+				<a href="{% url 'clientes:editarclientes' id=cli.id %}" data-toggle="tooltip" class='btn btn-outline-success' data-placement="top" title="" data-original-title="Editar Cliente"><i class="fas fa-pen-nib "></i></a>
+				{% if request.user.is_superuser or request.user|has_group:"Administrador"%}
+				<a href="{% url 'clientes:Deleteclientes' id=cli.id %}" data-toggle="tooltip" class='btn btn-outline-danger' data-placement="top" title="" data-original-title="Eliminar Cliente"><i
+						class="fas fa-trash cursorpointer icon-danger "></i></a>
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		{% else %}
+		<tr>
+			<td colspan="8">
+				<h3>NO EXISTEN CLIENTES</h3>
+			</td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
+{% endblock %}

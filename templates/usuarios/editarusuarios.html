@@ -1,0 +1,83 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}
+<a href="{% url 'vilsoft:detalleUsuarios' %}" class="text-primary fa-stack" data-toggle="tooltip" data-placement="bottom" data-original-title="Regresar">
+	<i class="far fa-arrow-alt-circle-left fa-2x "></i>
+</a>
+Usuarios
+{% endblock %}
+{% block content %}
+<form method="post" action="#" enctype="multipart/form-data" autocomplete="Off">
+	{% csrf_token %}
+	<fieldset>
+		<legend>Datos del Profesional</legend>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>{{ form2.username.label }}</strong></label>{{form2.username }}{{form2.username.errors }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>{{ form2.first_name.label }}</strong></label>{{form2.first_name }}{{form2.first_name.errors }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>{{ form2.last_name.label }}</strong></label>{{form2.last_name }}{{form2.last_name.errors }}
+					</div>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>{{ form2.email.label }}</strong></label>{{form2.email }}{{form2.email.errors }}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>{{ form.movil.label }}</strong></label>{{form.movil }}{{form.movil.errors }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label><strong>{{ form.Foto.label }}</strong></label>{{form.Foto }}{{form.Foto.errors }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12"><br>
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+								<label for=""><strong>Permisos:</strong></label>
+							</div>
+							{% for gru in grupos %}
+							<div class="col-md-2">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="GroupPermission" id="grupo{{gru.id}}" value="{{gru.id}}" {% if forloop.counter == 1%} checked {% endif %}>
+									<label class="form-check-label" for="exampleRadios1">
+										{{gru.name}}
+									</label>
+								</div>
+							</div>
+							{% endfor%}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+	<div class="container">
+		<div class="row">
+			<div class="offset-md-5 col-md-2">
+				<button type="submit" class="btn btn-outline-primary btn-ico">Guardar</button>
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

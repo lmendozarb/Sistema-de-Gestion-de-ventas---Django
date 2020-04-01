@@ -1,0 +1,72 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block titulo %}Contacto Cliente
+{% endblock %}
+{% block content %}
+<form method="post">
+	{% csrf_token %}
+	<fieldset>
+		<legend>Datos del Contacto</legend>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>{{ form.NombreContacto.label }}</strong></label>{{form.NombreContacto }}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>{{ form.ApellidoContacto.label }}</strong></label>{{form.ApellidoContacto }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>{{ form.TipoDocumentoContacto.label }}</label>{{form.TipoDocumentoContacto }}
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label>{{ form.NroDocumentoContacto.label }}</label>{{form.NroDocumentoContacto }}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label><strong>{{ form.CorreoElectronicoContacto.label }}</strong></label>{{form.CorreoElectronicoContacto }}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>{{ form.MovilContacto.label }}</strong></label>{{form.MovilContacto }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label><strong>{{ form.LugarTrabajo.label }}</strong></label>{{form.LugarTrabajo }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>{{ form.Cargo.label }}</label>{{form.Cargo }}
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+					{{form.Principal }}<label>{{ form.Principal.label }}</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+	<div class="container">
+		<div class="row">
+			<div class="offset-md-5 col-md-2">
+				<button type="submit" class="btn btn-outline-primary btn-ico">Registrar Contacto</button>
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

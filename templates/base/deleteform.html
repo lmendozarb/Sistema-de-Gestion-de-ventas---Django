@@ -1,0 +1,29 @@
+{% extends 'base/baseinitial.html' %}
+{% load staticfiles %}
+{% block content%}
+	<div class="container ">
+		<div class="row">
+			<div class="col-12">
+				<div class="wd-300 wd-sm-300 mg-b-30" style='margin:0 auto;'><img src="{% static 'img/delete.png' %}" class="img-fluid" alt=""></div>
+			</div>
+			<div class="col-12">
+				<form method="post" autocomplete="off" class="form-vertical" style='text-align:center;'>
+					{% csrf_token %}
+					<h4 class="tx-20 tx-sm-24">{{ aeliminar.0 }}</h4>
+					<p class="tx-color-03 mg-b-40">{{ aeliminar.1|safe}}</p>
+					<div class="tx-13 tx-lg-14 mg-b-40">
+						<button type="submit" class="btn btn-brand-02 d-inline-flex align-items-center">Si, estoy seguro</button>
+						<button type="button" onclick="goBack()" class="btn btn-white d-inline-flex align-items-center mg-l-5">No, regrésame</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock%}
+{% block js %}
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+{% endblock %}
