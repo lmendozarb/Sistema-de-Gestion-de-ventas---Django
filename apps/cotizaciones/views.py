@@ -129,40 +129,6 @@ def save_all(request,form,template_name,id,iditem):
 	data['html_form'] = render_to_string(template_name,context,request=request)
 	return JsonResponse(data)
 
-
-# def RegistrarItem2(request, id, iditem):
-# 	form = CuerpoCotizacionForm(request.POST or None)
-# 	if(request.method=='POST'):
-# 		formResult=form.save()
-# 		if(form.is_valid()):
-# 			frore = form.save(commit=False)
-# 			cabe = get_object_or_404(CotizacionCabecera,id=id)
-# 			frore.cabecera = cabe
-# 			produc = get_object_or_404(Producto,id=iditem)
-# 			frore.item = produc
-# 			frore.precio=produc.Precio
-# 			frore.save()
-# 			return redirect('cotizaciones:boucher',id=id)
-# 	return save_all(request,form,'cotizacion/item2.html',id,iditem)
-#
-#
-# def RegistrarItem2(request, id, iditem):
-# 	form = CuerpoCotizacionForm(request.POST or None)
-# 	if(request.method=='POST'):
-# 		formResult=form.save()
-# 		if(form.is_valid()):
-# 			frore = form.save(commit=False)
-# 			cabe = get_object_or_404(CotizacionCabecera,id=id)
-# 			frore.cabecera = cabe
-# 			produc = get_object_or_404(Producto,id=iditem)
-# 			frore.item = produc
-# 			frore.precio=produc.Precio
-# 			frore.save()
-# 			return redirect('cotizaciones:boucher',id=id)
-# 	context = {'form':form,"id":id,"iditem":iditem}
-# 	return render(request, 'cotizacion/cabecera.html', context)
-
-
 def RegistrarItem(request, id, iditem):
 	form = CuerpoCotizacionForm(request.POST or None)
 	if(request.method=='POST'):
@@ -238,7 +204,7 @@ def ProcessPayment(request):
 		denomination = request.POST['denomination']
 		amount = int(float(request.POST['amount'].replace(",","."))*100)
 		CodigoPublico = request.POST['CodigoPublico']
-		culqipy.secret_key = "sk_test_nGczFokyhuLRVaRj"
+		culqipy.secret_key = "aca va tu llave secreta de culqi"
 		dir_charge = {'amount': amount,
 					'capture': True,
 					'currency_code': 'PEN',
