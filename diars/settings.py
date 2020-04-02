@@ -86,10 +86,10 @@ WSGI_APPLICATION = 'diars.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'diars',
-		'USER': 'root',
-		'PASSWORD': 'CamotitoFrito',
-		'HOST': '127.0.0.1',
+		'NAME': 'nombredebasededatos',
+		'USER': 'usuario',
+		'PASSWORD': 'contraseña',
+		'HOST': 'localhost',
 	}
 }
 
@@ -143,5 +143,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "noreply@hacklibre.com"
-EMAIL_HOST_PASSWORD = "Seq3%eD*"
+EMAIL_HOST_USER = "correo del que quieres enviar"
+EMAIL_HOST_PASSWORD = "codigo de tu host de correo"
