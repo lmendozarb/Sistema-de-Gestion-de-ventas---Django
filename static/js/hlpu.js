@@ -4,7 +4,7 @@ $(document).ready(function() {
         amount = amount.replace(",", ".");
         amount = amount * 100;
         denomination = $("#denomination").val();
-        Culqi.publicKey = 'aca va tu cable de culqi';
+        Culqi.publicKey = 'pk_test_c9fcab4f58f238db';
         Culqi.settings({
             title: 'Vilsoft PAGO URL',
             currency: 'PEN',

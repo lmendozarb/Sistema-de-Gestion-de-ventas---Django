@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import environ
+env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -84,13 +86,14 @@ WSGI_APPLICATION = 'diars.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'nombredebasededatos',
-		'USER': 'usuario',
-		'PASSWORD': 'contraseña',
-		'HOST': 'localhost',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('MYSQL_DATABASE', default='erp_test'),
+        'USER': env('MYSQL_USER', default='user_erp_test'),
+        'PASSWORD': env('MYSQL_PASSWORD', default='erp_test%2021!'),
+        'HOST': env('DB_HOST', default='db'),
+        'PORT': env('DB_PORT', default='3306'),
+    }
 }
 
 

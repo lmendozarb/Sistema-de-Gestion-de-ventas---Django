@@ -204,7 +204,7 @@ def ProcessPayment(request):
 		denomination = request.POST['denomination']
 		amount = int(float(request.POST['amount'].replace(",","."))*100)
 		CodigoPublico = request.POST['CodigoPublico']
-		culqipy.secret_key = "aca va tu llave secreta de culqi"
+		culqipy.secret_key = "sk_test_20b7393c16de8af6"
 		dir_charge = {'amount': amount,
 					'capture': True,
 					'currency_code': 'PEN',
