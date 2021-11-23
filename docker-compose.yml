@@ -9,6 +9,8 @@ services:
       - .env    
     volumes:
       - .:/code
+    networks:
+      - italmod-oms
 
   web:
     build: .
@@ -17,8 +19,21 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - db
     env_file:
       - .env
+    environment:
+      - VIRTUAL_HOST=test.blux-in.com
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=test.blux-in.com
+      - LETSENCRYPT_EMAIL=lmendoza@blux-in.com
+    networks:
+      - italmod-oms
 
+networks:
+  italmod-oms:
+    external:
+      name: nginx-proxy
