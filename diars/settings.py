@@ -146,5 +146,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "correo del que quieres enviar"
-EMAIL_HOST_PASSWORD = "codigo de tu host de correo"
+EMAIL_HOST_USER = "noreply@hacklibre.com"
+EMAIL_HOST_PASSWORD = "$gc!VvUb@$w%gH74$rpBpcnyRyMJ#FJ$8Af8*YfA!Z2&Icgz9!"
